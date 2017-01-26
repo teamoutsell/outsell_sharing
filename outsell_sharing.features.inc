@@ -15,6 +15,41 @@ function outsell_sharing_ctools_plugin_api($module = NULL, $api = NULL) {
 }
 
 /**
+ * Implements hook_eck_bundle_info().
+ */
+function outsell_sharing_eck_bundle_info() {
+  $items = array(
+    'segment_segment' => array(
+      'machine_name' => 'segment_segment',
+      'entity_type' => 'segment',
+      'name' => 'segment',
+      'label' => 'Segment',
+    ),
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_eck_entity_type_info().
+ */
+function outsell_sharing_eck_entity_type_info() {
+  $items = array(
+    'segment' => array(
+      'name' => 'segment',
+      'label' => 'Segment',
+      'properties' => array(
+        'title' => array(
+          'label' => 'Title',
+          'type' => 'text',
+          'behavior' => 'title',
+        ),
+      ),
+    ),
+  );
+  return $items;
+}
+
+/**
  * Implements hook_flag_default_flags().
  */
 function outsell_sharing_flag_default_flags() {
@@ -58,42 +93,6 @@ function outsell_sharing_flag_default_flags() {
 }
 
 /**
- * Implements hook_eck_bundle_info().
- */
-function outsell_sharing_eck_bundle_info() {
-  $items = array(
-    'segment_segment' => array(
-      'machine_name' => 'segment_segment',
-      'entity_type' => 'segment',
-      'name' => 'segment',
-      'label' => 'Segment',
-      'config' => array(),
-    ),
-  );
-  return $items;
-}
-
-/**
- * Implements hook_eck_entity_type_info().
- */
-function outsell_sharing_eck_entity_type_info() {
-  $items = array(
-    'segment' => array(
-      'name' => 'segment',
-      'label' => 'Segment',
-      'properties' => array(
-        'title' => array(
-          'label' => 'Title',
-          'type' => 'text',
-          'behavior' => 'title',
-        ),
-      ),
-    ),
-  );
-  return $items;
-}
-
-/**
  * Implements hook_node_info().
  */
 function outsell_sharing_node_info() {
@@ -121,7 +120,7 @@ function outsell_sharing_node_info() {
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
-    )
+    ),
   );
   drupal_alter('node_info', $items);
   return $items;
