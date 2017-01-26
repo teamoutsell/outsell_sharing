@@ -85,15 +85,7 @@ function outsell_sharing_node_info() {
       'has_title' => '1',
       'title_label' => t('Title'),
       'help' => '',
-    ),
-    'wiki' => array(
-      'name' => t('Wiki'),
-      'base' => 'node_content',
-      'description' => '',
-      'has_title' => '1',
-      'title_label' => t('Title'),
-      'help' => '',
-    ),
+    )
   );
   drupal_alter('node_info', $items);
   return $items;
