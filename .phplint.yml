@@ -1,0 +1,10 @@
+path:
+  - ./
+extensions:
+  - php
+  - inc
+  - module
+  - install
+exclude:
+  - vendor
+  - public

@@ -1,0 +1,68 @@
+# Editor paths
+.project
+.idea
+.buildpath
+.DS_Store
+
+# Build directories
+code/
+code_build/
+deploy/
+
+# Sites
+settings.local.php
+sites/*/files
+
+# Ignore files
+files
+private
+tmp
+
+# Theme vendor dirs
+**/node_modules
+**/node_modules/*
+**/bower_components
+**/bower_components/*
+
+# Ignore CSS / sass cache
+**/.sass-cache
+**/.sass-cache/*
+themes/*/css
+*.map
+
+# Backups
+backups/
+
+# Databases
+dbs/
+*.sql
+
+# Composer
+vendor
+!modules/tethys/tethys_connector/libraries/guzzle/vendor/
+
+# Test
+.phplint-cache
+
+# Platform.sh build directory
+public
+sso.php
+
+# Kalabox
+_rest_managed.json
+.*.swp
+._*
+.git
+.hg
+.lock-wscript
+.svn
+.wafpickle-*
+CVS
+.DS_Store
+*.log
+node_modules
+*.tar
+*.id_rsa
+config/drush/cache
+config/composer/*
+.rnd
