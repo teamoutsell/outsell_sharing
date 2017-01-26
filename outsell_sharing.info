@@ -152,3 +152,4 @@ features[variable][] = node_submitted_report
 features_exclude[taxonomy][report_type] = report_type
 features_exclude[dependencies][outsell_workflow_settings] = outsell_workflow_settings
 features_exclude[dependencies][outsell_workflow_vocabulary_s] = outsell_workflow_vocabulary_s
+features_exclude[field_base][body] = body

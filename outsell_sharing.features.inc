@@ -60,7 +60,7 @@ function outsell_sharing_flag_default_flags() {
 /**
  * Implements hook_eck_bundle_info().
  */
-function outsell_segment_entity_eck_bundle_info() {
+function outsell_sharing_eck_bundle_info() {
   $items = array(
     'segment_segment' => array(
       'machine_name' => 'segment_segment',
@@ -76,7 +76,7 @@ function outsell_segment_entity_eck_bundle_info() {
 /**
  * Implements hook_eck_entity_type_info().
  */
-function outsell_segment_entity_eck_entity_type_info() {
+function outsell_sharing_eck_entity_type_info() {
   $items = array(
     'segment' => array(
       'name' => 'segment',
