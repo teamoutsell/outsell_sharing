@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Code for the Outsell workflow content types feature.
+ */
+
+include_once 'outsell_sharing.features.inc';
+
+/**
+ * Character Limiter.
+ *
+ * Limits the string based on the character count. Preserves complete words
+ * so the character count may not be exactly as specified.
+ *
+ * @param string $str
+ *   The string to summarize.
+ * @param int $n
+ *   The length of the summary.
+ * @param string $end_char
+ *   The end character. Usually an ellipsis.
+ *
+ * @return string
+ *   Parsed string.
+ */
+function _outsell_sharing_summarize($str, $n = 500, $end_char = '&#8230;') {
+  if (strlen($str) < $n) {
+    return $str;
+  }
+
+  $str = preg_replace("/\s+/", ' ', str_replace(array("\r\n", "\r", "\n"), ' ', $str));
+  if (strlen($str) <= $n) {
+    return $str;
+  }
+
+  $out = "";
+  foreach (explode(' ', trim($str)) as $val) {
+    $out .= $val . ' ';
+    if (strlen($out) >= $n) {
+      $out = trim($out);
+      return (strlen($out) == strlen($str)) ? $out : $out . $end_char;
+    }
+  }
+}
+
+/**
+ * Search backwards starting from haystack length characters from the end.
+ *
+ * @param string $haystack
+ *   The source string.
+ * @param string $needle
+ *   The pattern that needs to be checked.
+ *
+ * @return bool
+ *   Truthy.
+ */
+function _outsell_sharing_str_begin($haystack, $needle) {
+  return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
+}
+
+/**
+ * Search forward starting from end minus needle length characters.
+ *
+ * @param string $haystack
+ *   The source string.
+ * @param string $needle
+ *   The pattern that needs to be checked.
+ *
+ * @return bool
+ *   Truth.
+ */
+function _outsell_sharing_str_end($haystack, $needle) {
+  return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+}

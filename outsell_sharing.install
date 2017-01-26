@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for Workflow Content Types module.
+ */
+
+/**
+ * Fill missing short descriptions & format the TOC fields.
+ */
+function outsell_sharing_update_7000(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    // Initialize batch update information.
+    $sandbox['progress'] = 0;
+    $sandbox['last_entity_id'] = 0;
+    $count = db_select('node', 'n')
+      ->fields('n', array('nid'))
+      ->condition('n.type', 'report')
+      ->countQuery()
+      ->execute()->fetchAssoc();
+    $sandbox['max'] = isset($count['expression']) ? (int) $count['expression'] : 0;
+  }
+
+  // Get the next report to update.
+  $report = db_select('node', 'n')
+    ->fields('n', array('nid'))
+    ->condition('n.type', 'report')
+    ->condition('n.nid', $sandbox['last_entity_id'], '>')
+    ->orderBy('n.nid', 'ASC')
+    ->execute()->fetchAssoc();
+  $sandbox['last_entity_id'] = $report['nid'];
+
+  if (isset($report['nid'])) {
+    $save = FALSE;
+    $node = node_load($report['nid']);
+
+    // Add a summary of the body field if no description exists.
+    if (!isset($node->field_short_description[LANGUAGE_NONE][0]['value']) && isset($node->body[LANGUAGE_NONE][0]['value'])) {
+      // @todo Ignore HTML characters.
+      $summary = _outsell_sharing_summarize($node->body[LANGUAGE_NONE][0]['value'], 300);
+      $node->field_short_description[LANGUAGE_NONE][0]['value'] = $summary;
+      $save = TRUE;
+    }
+
+    // Add <ul> to TOC if it does not exist.
+    if (isset($node->field_toc[LANGUAGE_NONE][0]['value'])) {
+      // Check if the string begins with the <ul> & </ul> tag.
+      if (_outsell_sharing_str_begin($node->field_toc[LANGUAGE_NONE][0]['value'], '<ul>') === FALSE &&
+        _outsell_sharing_str_end($node->field_toc[LANGUAGE_NONE][0]['value'], '</ul>') === FALSE) {
+        $node->field_toc[LANGUAGE_NONE][0]['value'] = '<ul>' . $node->field_toc[LANGUAGE_NONE][0]['value'] . '</ul>';
+        $save = TRUE;
+      }
+    }
+
+    // Update the node only if any change is made.
+    if ($save) {
+      node_save($node);
+    }
+
+    // Update our progress information for the batch update.
+    $sandbox['progress']++;
+  }
+
+  // If there's no max value then there's nothing to update and we're finished.
+  if ($sandbox['progress'] == $sandbox['max']) {
+    return t('All reports have been updated.');
+  }
+  else {
+    // Indicate our current progress to the batch update system.
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
+  }
+}
