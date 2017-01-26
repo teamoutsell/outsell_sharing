@@ -8,67 +8,74 @@
 include_once 'outsell_sharing.features.inc';
 
 /**
- * Character Limiter.
- *
- * Limits the string based on the character count. Preserves complete words
- * so the character count may not be exactly as specified.
- *
- * @param string $str
- *   The string to summarize.
- * @param int $n
- *   The length of the summary.
- * @param string $end_char
- *   The end character. Usually an ellipsis.
- *
- * @return string
- *   Parsed string.
+ * Implements hook_permission().
  */
-function _outsell_sharing_summarize($str, $n = 500, $end_char = '&#8230;') {
-  if (strlen($str) < $n) {
-    return $str;
-  }
+function outsell_sharing_permission() {
+  return array(
+    'access all segments' => array(
+      'title' => t('Access all segments'),
+    ),
+    'access b2b segments' => array(
+      'title' => t('Access all b2b segments'),
+    ),
+    'access cnf-grc segments' => array(
+      'title' => t('Access all cnf/grc segments'),
+    ),
+    'access ent segments' => array(
+      'title' => t('Access all ent segments'),
+    ),
+    'access library segments' => array(
+      'title' => t('Access all library segments'),
+    ),
+    'access ltr-grc segments' => array(
+      'title' => t('Access all ltr/grc segments'),
+    ),
+    'access stm segments' => array(
+      'title' => t('Access all stm segments'),
+    ),
+    'access mm segments' => array(
+      'title' => t('Access all marketing-media (mm) segments'),
+    ),
+  );
+}
 
-  $str = preg_replace("/\s+/", ' ', str_replace(array("\r\n", "\r", "\n"), ' ', $str));
-  if (strlen($str) <= $n) {
-    return $str;
-  }
+/**
+ * Implements hook_segment_explorer_segments_preprocess().
+ */
+function outsell_sharing_segment_explorer_segments_preprocess($segments) {
+  $mapping = variable_get('segment_mapping', array());
 
-  $out = "";
-  foreach (explode(' ', trim($str)) as $val) {
-    $out .= $val . ' ';
-    if (strlen($out) >= $n) {
-      $out = trim($out);
-      return (strlen($out) == strlen($str)) ? $out : $out . $end_char;
+  foreach ($segments as $key => $row) {
+    $access = FALSE;
+
+    if (user_access('access all segments') == TRUE && in_array(strtolower($row['short_name']), $mapping['all'])) {
+      $access = TRUE;
+    }
+    if (user_access('access b2b segments') == TRUE && in_array(strtolower($row['short_name']), $mapping['b2b'])) {
+      $access = TRUE;
+    }
+    if (user_access('access cnf-grc segments') == TRUE && in_array(strtolower($row['short_name']), $mapping['c&f/grc'])) {
+      $access = TRUE;
+    }
+    if (user_access('access ent segments') == TRUE && in_array(strtolower($row['short_name']), $mapping['e&t'])) {
+      $access = TRUE;
+    }
+    if (user_access('access library segments') == TRUE && in_array(strtolower($row['short_name']), $mapping['liberty'])) {
+      $access = TRUE;
+    }
+    if (user_access('access ltr-grc segments') == TRUE && in_array(strtolower($row['short_name']), $mapping['ltr/grc'])) {
+      $access = TRUE;
+    }
+    if (user_access('access stm segments') == TRUE && in_array(strtolower($row['short_name']), $mapping['stm'])) {
+      $access = TRUE;
+    }
+    if (user_access('access mm segments') == TRUE && in_array(strtolower($row['short_name']), $mapping['marketing&media'])) {
+      $access = TRUE;
+    }
+    if ($access == FALSE) {
+      unset($segments[$key]);
     }
   }
-}
 
-/**
- * Search backwards starting from haystack length characters from the end.
- *
- * @param string $haystack
- *   The source string.
- * @param string $needle
- *   The pattern that needs to be checked.
- *
- * @return bool
- *   Truthy.
- */
-function _outsell_sharing_str_begin($haystack, $needle) {
-  return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
-}
-
-/**
- * Search forward starting from end minus needle length characters.
- *
- * @param string $haystack
- *   The source string.
- * @param string $needle
- *   The pattern that needs to be checked.
- *
- * @return bool
- *   Truth.
- */
-function _outsell_sharing_str_end($haystack, $needle) {
-  return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== FALSE);
+  return $segments;
 }
