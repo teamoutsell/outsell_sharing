@@ -8,6 +8,100 @@
 include_once 'outsell_sharing.features.inc';
 
 /**
+ * Implements hook_menu().
+ */
+function outsell_sharing_menu() {
+
+  // Settings for sharing.
+  $menu['admin/config/outsell/sharing'] = array(
+    'title' => 'Sharing',
+    'description' => 'Settings around content sharing.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('outsell_sharing_settings_form'),
+    'type' => MENU_NORMAL_ITEM,
+    'access arguments' => array('administer site configuration'),
+  );
+
+  return $menu;
+}
+
+/**
+ * Drupal form for our sharing settings.
+ */
+function outsell_sharing_settings_form() {
+
+  // Get the available content types we can share.
+  $content_types = outsell_sharing_node_info();
+  $test = $test;
+
+  // Basic sharing config.
+  $form['outsell_sharing_config'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Sharing configuration'),
+    '#weight' => 0,
+  );
+  $form['outsell_sharing_config']['outsell_sharing_sender'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow this site to send content to other sites.'),
+    '#description' => t('This will allow this site to send new content to other sites.'),
+    '#default_value' => variable_get('outsell_sharing_sender', FALSE),
+  );
+  $form['outsell_sharing_config']['outsell_sharing_getter'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Allow this site to get content from other sites.'),
+    '#description' => t('This will allow this site to receive new content from other sites.'),
+    '#default_value' => variable_get('outsell_sharing_getter', FALSE),
+  );
+
+  // Options for sending.
+  $form['outsell_sharing_sender_config'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Configure Sending'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="outsell_sharing_sender"]' => array('checked' => TRUE),
+      )
+    )
+  );
+
+  // Options for getting.
+  $form['outsell_sharing_getter_config'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Configure Getting'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name="outsell_sharing_getter"]' => array('checked' => TRUE),
+      )
+    )
+  );
+
+  // Loop through our content types and add options for each type.
+  foreach ($content_types as $type => $data) {
+
+    // Define a reusable html wrapper for the type.
+    $t_opts = array('!type' => '<strong><em>' . $type . '</em></strong>');
+
+    // Add form vars for all the types of things we can get.
+    $form['outsell_sharing_getter_config']['outsell_sharing_get_' . $type] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Get !type.', $t_opts),
+      '#description' => t('This will allow this site to receive !type content from other sites.', $t_opts),
+      '#default_value' => variable_get('outsell_sharing_get_' . $type, FALSE),
+      '#states' => array(
+        'unchecked' => array(
+          ':input[name="outsell_sharing_getter"]' => array('checked' => FALSE),
+        )
+      )
+    );
+
+  }
+
+  // Wrap and return.
+  return system_settings_form($form);
+
+}
+
+/**
  * Implements hook_permission().
  */
 function outsell_sharing_permission() {
