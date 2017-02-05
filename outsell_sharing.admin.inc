@@ -90,6 +90,26 @@ function outsell_sharing_settings_form() {
       )
     )
   );
+  $form['outsell_sharing_getter_config']['outsell_sharing_apikey'] = array(
+    '#type' => 'textfield',
+    '#title' => t('API Key'),
+    '#description' => t('Use this to send content from another site to this one.'),
+    '#default_value' => variable_get('outsell_sharing_apikey', md5(drupal_random_bytes(128))),
+    '#prefix' => '<div id="outsell-sharing-apikey-ajax">',
+    '#suffix' => '</div>',
+    '#size' => 60,
+    '#maxlength' => 128
+  );
+  $form['outsell_sharing_getter_config']['outsell_sharing_apikey_refresh'] = array(
+    '#type' => 'button',
+    '#value' => t('Regenerate token'),
+    '#ajax' => array(
+      'callback' => 'outsell_sharing_regenerate_apikey_ajax',
+      'wrapper' => 'outsell-sharing-apikey-ajax',
+      'method' => 'replace',
+      'effect' => 'fade'
+    )
+  );
 
   // Loop through our content types and add options for each type.
   foreach ($content_types as $type => $data) {
@@ -108,6 +128,15 @@ function outsell_sharing_settings_form() {
   // Wrap and return.
   return system_settings_form($form);
 
+}
+
+/**
+ * Helper function to regenerate the api key.
+ */
+function outsell_sharing_regenerate_apikey_ajax($form, $form_state) {
+  $apikey = $form['outsell_sharing_getter_config']['outsell_sharing_apikey'];
+  $apikey['#value'] = md5(drupal_random_bytes(128));
+  return $apikey;
 }
 
 /**
