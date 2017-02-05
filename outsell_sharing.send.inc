@@ -11,7 +11,7 @@
 function outsell_sharing_build_content($node) {
 
   // Define possible file fields that need contents loaded.
-  $file_fields = array('file', image);
+  $file_fields = array('file', 'image');
 
   // Get the metadata wrapper for the node.
   $wrap_node = entity_metadata_wrapper('node', $node);
@@ -53,33 +53,24 @@ function outsell_sharing_build_content($node) {
 /**
  * Helper function to send content to an endpoint.
  */
-function outsell_sharing_send_content($content, $endpoint) {
+function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
 
-  // JSONofy our data.
-  $data = json_encode($content);
-
-  // Define headers.
-  $headers = array(
-    'Content-Type: application/json',
-    'Content-Length: ' . strlen($data),
+  // JSONify our data.
+  $data = array(
+    'data' => json_encode($content),
+    'auth' => $apikey
   );
 
-  // cURL.
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $endpoint);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-  curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+  // Build our options.
+  $options = array(
+    'method' => strtoupper($method),
+    'data' => drupal_http_build_query($data),
+    'timeout' => 15,
+    'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
+  );
 
   // Execute.
-  $result = curl_exec($ch);
-
-  // Close connection.
-  curl_close($ch);
-  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  $result = drupal_http_request($endpoint, $options);
 
   // Return result.
   return $result;
@@ -97,11 +88,31 @@ function outsell_sharing_send_node($nid, $sites, &$context) {
   // Build the content.
   $content = outsell_sharing_build_content($node);
 
-  // Ship the content.
-  $result = outsell_sharing_send_content($content, 'http://google.com');
+  // Set up our initial results array if needed.
+  foreach ($sites as $site => $key) {
+    if (!isset($context['results'][$site])) {
+      $context['results'][$site] = array(
+        'succeeded' => array(),
+        'failed' => array()
+      );
+    }
+  }
 
-  // Store some result for post-processing in the finished callback.
-  $context['results'][] = check_plain($node->title);
+  // Ship the content and collect results.
+  foreach ($sites as $site => $key) {
+
+    // Get the result.
+    $result = outsell_sharing_send_content('POST', $content, $site, $key);
+
+    // Increment our situation as appropriate.
+    if ($result->code === '200') {
+      $context['results'][$site]['succeeded'][] = $content['nid'];
+    }
+    else {
+      $context['results'][$site]['failed'][] = $content['nid'];
+    }
+
+  }
 
 }
 
@@ -109,24 +120,50 @@ function outsell_sharing_send_node($nid, $sites, &$context) {
  * Batch helper function to report results.
  */
 function outsell_sharing_batch_finished($success, $results, $operations) {
+
+  // Build meaningful messages.
   if ($success) {
-    // Here we could do something meaningful with the results.
-    // We just display the number of nodes we processed...
-    drupal_set_message(t('@count results processed in @requests HTTP requests.', array('@count' => count($results), '@requests' => 'wefwef')));
-    drupal_set_message(t('The final result was "%final"', array('%final' => end($results))));
+
+    // Gather helpful info to report and log.
+    foreach ($results as $site => $data) {
+
+      // Print helpful success messages if applicable.
+      if (count($data['succeeded']) > 0) {
+        $success_message = '@site received @succeeded pieces of content.';
+        $success_message_args = array('@site' => $site, '@succeeded' => count($data['succeeded']));
+        drupal_set_message(t($success_message, $success_message_args), 'status');
+        watchdog('outsell_sharing', $success_message, $success_message_args, WATCHDOG_INFO);
+      }
+
+      // Print helpful fail messages if applicable.
+      if (count($data['failed']) > 0) {
+        $success_message = '@site did not receive @failed pieces of content.';
+        $success_message_args = array('@site' => $site, '@failed' => count($data['failed']));
+        drupal_set_message(t($success_message, $success_message_args), 'warning');
+        watchdog('outsell_sharing', $success_message, $success_message_args, WATCHDOG_WARNING);
+      }
+
+    }
+
   }
+
+  // Log some sort of error.
   else {
-    // An error occurred.
-    // $operations contains the operations that remained unprocessed.
+
+    // Get the leftover ops that failed.
     $error_operation = reset($operations);
-    drupal_set_message(
-    t('An error occurred while processing @operation with arguments : @args',
-    array(
+
+    // Construct an error message.
+    $err_message = t('An error occurred while processing @operation with arguments : @args');
+    $err_message_args = array(
       '@operation' => $error_operation[0],
-      '@args' => print_r($error_operation[0], TRUE),
-    )
-    ),
-    'error'
+      '@args' => print_r($error_operation[0], TRUE)
     );
+
+    // Print and log the error.
+    drupal_set_message($err_message, $err_message_args, 'error');
+    watchdog('outsell_sharing', $err_message, $err_message_args, WATCHDOG_ERROR);
+
   }
+
 }

@@ -6,22 +6,12 @@
  */
 
 /**
- * Return list of allowed sites to send to.
- */
-function outsell_sharing_get_sites() {
-  return array('community', 'editors', 'outsellinc');
-}
-
-/**
  * Drupal form for our sharing settings.
  */
 function outsell_sharing_settings_form() {
 
   // Get the available content types we can share.
   $content_types = outsell_sharing_node_info();
-
-  // Define the sites we can send to.
-  $sites = outsell_sharing_get_sites();
 
   // Basic sharing config.
   $form['outsell_sharing_config'] = array(
@@ -52,38 +42,37 @@ function outsell_sharing_settings_form() {
       )
     )
   );
-  $form['outsell_sharing_sender_config']['description'] = array(
-    '#type' => 'markup',
-    '#markup' => t('Batch send the below kinds of content'),
+  $form['outsell_sharing_sender_config']['outsell_sharing_sites'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Sites to send content and their api keys (one per line):'),
+    '#cols' => 50,
+    '#rows' => 5,
+    '#default_value' => list_allowed_values_string(variable_get('outsell_sharing_sites', array())),
+    '#description' => t('Enter sites here in the format url|apikey (one per line), e.g:
+<br/>
+<br/>https://editors.kbox.site|h39yfih9po3nop3u9fh3
+<br/>https://outsellinc.com|09u3foin4fioh8hlkeshio
+<br/>
+<br/>NOTE: You must enable these sites to receive content. When you do you will get an API key to use above.
+'),
   );
 
-  // Loop through our content types and add options for each type.
+  // Loop through our sites and add options for each.
   foreach ($content_types as $type => $data) {
     $t_opts = array('!type' => '<strong><em>' . $type . '</em></strong>');
     $form['outsell_sharing_sender_config']['outsell_sharing_send_' . $type] = array(
       '#type' => 'checkbox',
       '#title' => t('Send !type.', $t_opts),
-      '#description' => t('This will allow this site to send !type content to other sites.', $t_opts)
-    );
-  }
-
-  // Add other batch opts.
-  $form['outsell_sharing_sender_config']['description2'] = array(
-    '#type' => 'markup',
-    '#markup' => t('To the following sites (remember these sites must allow receipt of content)'),
-  );
-
-  // Loop through our sites and add options for each.
-  foreach ($sites as $site) {
-    $t_opts = array('!site' => '<strong><em>' . $site . '</em></strong>');
-    $form['outsell_sharing_sender_config']['outsell_sharing_send_' . $site] = array(
-      '#type' => 'checkbox',
-      '#title' => t('!site.', $t_opts),
-      '#description' => t('This will allow this site to send !site content to other sites.', $t_opts)
+      '#description' => t('This will allow this site to receive !type content from other sites.', $t_opts),
+      '#default_value' => variable_get('outsell_sharing_send_' . $type, FALSE),
     );
   }
 
   // Add our batch submit handler.
+  $form['outsell_sharing_sender_config']['outsell_sharing_batch_description'] = array(
+    '#type' => 'markup',
+    '#markup' => t('<br><br>Click below to batch send content based on the above.<br>'),
+  );
   $form['outsell_sharing_sender_config']['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Batch send'),
@@ -129,11 +118,28 @@ function outsell_sharing_settings_form_submit($form, &$form_state) {
   // Get the available content types we can share.
   $content_types = outsell_sharing_node_info();
 
+  // Make sure we arrayify our list.
+  $sites = $form_state['values']['outsell_sharing_sites'];
+  $form_state['values']['outsell_sharing_sites'] = list_extract_allowed_values($sites, 'list_text', FALSE);
+
   // Unset getters if needed.
   if ($form_state['values']['outsell_sharing_getter'] === 0) {
     foreach ($content_types as $type => $data) {
       $form_state['values']['outsell_sharing_get_' . $type] = 0;
     }
+  }
+
+  // Unset senders if needed.
+  if ($form_state['values']['outsell_sharing_sender'] === 0) {
+
+    // Remove content senders.
+    foreach ($content_types as $type => $data) {
+      $form_state['values']['outsell_sharing_send_' . $type] = 0;
+    }
+
+    // Remove sites.
+    $form_state['values']['outsell_sharing_sites'] = NULL;
+
   }
 
 }
@@ -146,12 +152,8 @@ function outsell_sharing_sender_batch_validate($form, &$form_state) {
   // Get the available content types we can share.
   $allowed_content_types = outsell_sharing_node_info();
 
-  // Define the sites we can send to.
-  $allowed_sites = outsell_sharing_get_sites();
-
   // Collect errors.
   $content_type_responses = 0;
-  $sites_responses = 0;
 
   // Collect responses.
   foreach ($allowed_content_types as $allowed_content_type => $data) {
@@ -159,18 +161,13 @@ function outsell_sharing_sender_batch_validate($form, &$form_state) {
       $content_type_responses++;
     }
   }
-  foreach ($allowed_sites as $allowed_site) {
-    if ((bool) $form_state['values']['outsell_sharing_send_' . $allowed_site] === TRUE) {
-      $sites_responses++;
-    }
-  }
 
   // Throw errors if needed.
   if ($content_type_responses === 0) {
     form_set_error('Content Type', t('Need to select at least one type of content!'));
   }
-  if ($sites_responses === 0) {
-    form_set_error('Site', t('Need to select at least one site!'));
+  if (empty($form_state['values']['outsell_sharing_sites'])) {
+    form_set_error('Site', t('Need to specify at least one site!'));
   }
 
 }
@@ -183,11 +180,10 @@ function outsell_sharing_sender_batch_submit($form, &$form_state) {
   // Get the available content types we can share.
   $allowed_content_types = outsell_sharing_node_info();
 
-  // Define the sites we can send to.
-  $allowed_sites = outsell_sharing_get_sites();
+  // Get the sites we want to send to.
+  $sites = list_extract_allowed_values($form_state['values']['outsell_sharing_sites'], 'list_text', FALSE);
 
   // Collectors for sites and content and node ids.
-  $sites = array();
   $content_types = array();
   $nids = array();
 
@@ -198,19 +194,12 @@ function outsell_sharing_sender_batch_submit($form, &$form_state) {
     }
   }
 
-  // Where we sending it to?
-  foreach ($allowed_sites as $allowed_site) {
-    if ((bool) $form_state['values']['outsell_sharing_send_' . $allowed_site] === TRUE) {
-      $sites[] = $allowed_site;
-    }
-  }
-
   // Grab all our node ids.
-  $sites_string = implode(', ', $sites);
+  $sites_string = implode(', ', array_keys($sites));
   foreach ($content_types as $content_type) {
 
     // Get the nodes.
-    $type_nids = db_query('SELECT nid FROM {node} WHERE type =  :type LIMIT 10', array(':type' => $content_type))->fetchCol();
+    $type_nids = db_query('SELECT nid FROM {node} WHERE type = :type LIMIT 10', array(':type' => $content_type))->fetchCol();
     $type_nids_count = count($type_nids);
 
     // Tell the user WTFIGO.
