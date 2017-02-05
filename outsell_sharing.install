@@ -16,7 +16,9 @@ function outsell_sharing_uninstall() {
   variable_del('outsell_sharing_get_insights');
   variable_del('outsell_sharing_get_news');
   variable_del('outsell_sharing_get_reports');
-  variable_del('outsell_sharing_getter');
+  variable_del('outsell_sharing_send_editors');
+  variable_del('outsell_sharing_send_community');
+  variable_del('outsell_sharing_send_outsellinc');
 
 }
 
