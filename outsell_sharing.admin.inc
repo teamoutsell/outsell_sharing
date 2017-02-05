@@ -210,7 +210,7 @@ function outsell_sharing_sender_batch_submit($form, &$form_state) {
   foreach ($content_types as $content_type) {
 
     // Get the nodes.
-    $type_nids = db_query('SELECT nid FROM {node} WHERE type =  :type', array(':type' => $content_type))->fetchCol();
+    $type_nids = db_query('SELECT nid FROM {node} WHERE type =  :type LIMIT 10', array(':type' => $content_type))->fetchCol();
     $type_nids_count = count($type_nids);
 
     // Tell the user WTFIGO.

@@ -25,6 +25,7 @@ dependencies[] = strongarm
 dependencies[] = taxonomy
 dependencies[] = text
 dependencies[] = user_reference
+dependencies[] = uuid
 features[ctools][] = strongarm:strongarm:1
 features[eck_bundle][] = segment_segment
 features[eck_entity_type][] = segment
