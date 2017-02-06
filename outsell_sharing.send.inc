@@ -55,10 +55,14 @@ function outsell_sharing_build_content($node) {
  */
 function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
 
+  // Build the URL.
+  $url = $endpoint . '/outsell/sharing/api/share';
+
   // JSONify our data.
   $data = array(
     'data' => json_encode($content),
-    'auth' => $apikey
+    'auth' => $apikey,
+    'XDEBUG_SESSION_START' => 'sublime.xdebug'
   );
 
   // Build our options.
@@ -70,7 +74,7 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
   );
 
   // Execute.
-  $result = drupal_http_request($endpoint, $options);
+  $result = drupal_http_request($url, $options);
 
   // Return result.
   return $result;

@@ -24,7 +24,25 @@ function outsell_sharing_menu() {
     'access arguments' => array('administer site configuration'),
   );
 
+  // Sharing API endpoint.
+  $menu['outsell/sharing/api/share'] = array(
+    'page callback' => 'outsell_sharing_api_router',
+    'access callback' => 'outsell_sharing_api_auth',
+    'file' => 'outsell_sharing.get.inc',
+    'file path' => drupal_get_path('module', 'outsell_sharing'),
+    'type' => MENU_CALLBACK,
+  );
+
   return $menu;
+}
+
+/**
+ * Helper function to authorize api requests.
+ */
+function outsell_sharing_api_auth($access) {
+
+  $test = $test;
+
 }
 
 /**
