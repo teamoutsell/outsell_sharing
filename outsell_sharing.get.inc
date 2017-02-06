@@ -19,6 +19,7 @@ function outsell_sharing_build_node($content) {
  */
 function outsell_sharing_api_router() {
 
-  print('esgeg');
+  print_r(drupal_json_decode($GLOBALS['HTTP_RAW_POST_DATA']));
+  $test = $test;
 
 }

@@ -41,7 +41,22 @@ function outsell_sharing_menu() {
  */
 function outsell_sharing_api_auth($access) {
 
-  $test = $test;
+  // Try to get the access key from $_SERVER.
+  // @TODO: this might be nginx specific.
+  $auth = $_SERVER['HTTP_AUTHORIZATION'];
+
+  // Check whether this request is allowed or not.
+  $allowed = ($auth === variable_get('outsell_sharing_apikey', ''));
+
+  // If not allowed, watchdog log it.
+  if (!$allowed) {
+    $not_allowed_message = 'API request using key "@key" was denied. Mismatched key.';
+    $not_allowed_message_options = array('@key' => $auth);
+    watchdog('outsell_sharing', $not_allowed_message, $not_allowed_message_options, WATCHDOG_WARNING);
+  }
+
+  // Return access.
+  return $allowed;
 
 }
 

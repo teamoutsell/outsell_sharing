@@ -59,25 +59,43 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
   $url = $endpoint . '/outsell/sharing/api/share';
 
   // JSONify our data.
-  $data = array(
-    'data' => json_encode($content),
-    'auth' => $apikey,
-    'XDEBUG_SESSION_START' => 'sublime.xdebug'
+  $data = drupal_json_encode($content);
+
+  // Specify the headers.
+  $headers = array(
+    'Content-Type: application/json',
+    'Content-Length: ' . strlen($data),
+    'Authorization: Token ' . $apikey
   );
 
-  // Build our options.
-  $options = array(
-    'method' => strtoupper($method),
-    'data' => drupal_http_build_query($data),
-    'timeout' => 15,
-    'headers' => array('Content-Type' => 'application/x-www-form-urlencoded'),
-  );
+  // Start the curl.
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_POST, TRUE);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+  curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+  // If we are on kalabox lets whitelist self-signed certs.
+  if ($_ENV['PLATFORM_ENVIRONMENT'] === 'kalabox' || $_ENV['KALABOX'] === 'ON') {
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+  }
 
   // Execute.
-  $result = drupal_http_request($url, $options);
+  $result = curl_exec($ch);
+  $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-  // Return result.
-  return $result;
+  // Close connection.
+  curl_close($ch);
+
+  // Return result and code.
+  return array(
+    'code' => $code,
+    'result' => $result
+  );
 
 }
 
@@ -109,7 +127,7 @@ function outsell_sharing_send_node($nid, $sites, &$context) {
     $result = outsell_sharing_send_content('POST', $content, $site, $key);
 
     // Increment our situation as appropriate.
-    if ($result->code === '200') {
+    if ($result['code'] === 200) {
       $context['results'][$site]['succeeded'][] = $content['nid'];
     }
     else {
@@ -133,7 +151,7 @@ function outsell_sharing_batch_finished($success, $results, $operations) {
 
       // Print helpful success messages if applicable.
       if (count($data['succeeded']) > 0) {
-        $success_message = '@site received @succeeded pieces of content.';
+        $success_message = '@site received @succeeded piece(s) of content.';
         $success_message_args = array('@site' => $site, '@succeeded' => count($data['succeeded']));
         drupal_set_message(t($success_message, $success_message_args), 'status');
         watchdog('outsell_sharing', $success_message, $success_message_args, WATCHDOG_INFO);
@@ -141,7 +159,7 @@ function outsell_sharing_batch_finished($success, $results, $operations) {
 
       // Print helpful fail messages if applicable.
       if (count($data['failed']) > 0) {
-        $success_message = '@site did not receive @failed pieces of content.';
+        $success_message = '@site did not receive @failed piece(s) of content.';
         $success_message_args = array('@site' => $site, '@failed' => count($data['failed']));
         drupal_set_message(t($success_message, $success_message_args), 'warning');
         watchdog('outsell_sharing', $success_message, $success_message_args, WATCHDOG_WARNING);
