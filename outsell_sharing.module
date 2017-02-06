@@ -24,9 +24,19 @@ function outsell_sharing_menu() {
     'access arguments' => array('administer site configuration'),
   );
 
-  // Sharing API endpoint.
+  // Sharing API upsert endpoint.
   $menu['outsell/sharing/api/share'] = array(
-    'page callback' => 'outsell_sharing_api_router',
+    'page callback' => 'outsell_sharing_api_upsert',
+    'access callback' => 'outsell_sharing_api_auth',
+    'file' => 'outsell_sharing.get.inc',
+    'file path' => drupal_get_path('module', 'outsell_sharing'),
+    'type' => MENU_CALLBACK,
+  );
+
+  // Sharing API delete endpoint.
+  $menu['outsell/sharing/api/share/%'] = array(
+    'page callback' => 'outsell_sharing_api_delete',
+    'page arguments' => array(1),
     'access callback' => 'outsell_sharing_api_auth',
     'file' => 'outsell_sharing.get.inc',
     'file path' => drupal_get_path('module', 'outsell_sharing'),
@@ -39,7 +49,7 @@ function outsell_sharing_menu() {
 /**
  * Helper function to authorize api requests.
  */
-function outsell_sharing_api_auth($access) {
+function outsell_sharing_api_auth() {
 
   // Try to get the access key from $_SERVER.
   // @TODO: this might be nginx specific.
@@ -48,11 +58,17 @@ function outsell_sharing_api_auth($access) {
   // Check whether this request is allowed or not.
   $allowed = ($auth === variable_get('outsell_sharing_apikey', ''));
 
-  // If not allowed, watchdog log it.
+  // If not allowed, watchdog and response code it.
   if (!$allowed) {
+
+    // Make a message.
     $not_allowed_message = 'API request using key "@key" was denied. Mismatched key.';
     $not_allowed_message_options = array('@key' => $auth);
     watchdog('outsell_sharing', $not_allowed_message, $not_allowed_message_options, WATCHDOG_WARNING);
+
+    // Set unauthorized code.
+    http_response_code(401);
+
   }
 
   // Return access.

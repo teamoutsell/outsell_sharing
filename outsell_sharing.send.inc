@@ -71,12 +71,20 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
   // Start the curl.
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_POST, TRUE);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
   curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+
+  // If we are POSTING.
+  if (strtoupper($method) === 'POST') {
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+  }
+  // Else custom method.
+  else {
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
+  }
 
   // If we are on kalabox lets whitelist self-signed certs.
   if ($_ENV['PLATFORM_ENVIRONMENT'] === 'kalabox' || $_ENV['KALABOX'] === 'ON') {
