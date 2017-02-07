@@ -216,30 +216,50 @@ function outsell_sharing_build_node($content) {
         // Handle taxonomy_term_reference fields.
         case 'taxonomy_term_reference':
 
-          // Grab matching terms.
-          $matched_terms = taxonomy_get_term_by_name($data['name'], $data['vocabulary_machine_name']);
+          // Is this a multivalued field or not.
+          $is_multivalue = (field_info_field($key)['cardinality'] != 1);
 
-          // Add the term if it doesn't already exist.
-          if (empty($matched_terms)) {
+          // If not mutlivalue array lets spoof it for now.
+          if (!$is_multivalue) {
+            $data = array($data);
+          }
 
-            // Start up a new term.
-            $term = (object) $data;
+          // Collect terms.
+          $terms = array();
 
-            // Set the vocabulary id using the machine name.
-            $term->vid = taxonomy_vocabulary_machine_name_load($term->vocabulary_machine_name)->vid;
+          // Lets go through our terms.
+          foreach ($data as $datum) {
 
-            // Add the term.
-            taxonomy_term_save($term);
+            // Grab matching terms.
+            $matched_terms = taxonomy_get_term_by_name($datum['name'], $datum['vocabulary_machine_name']);
+
+            // Add the term if it doesn't already exist.
+            if (empty($matched_terms)) {
+
+              // Start up a new term.
+              $term = (object) $datum;
+
+              // Set the vocabulary id using the machine name.
+              $term->vid = taxonomy_vocabulary_machine_name_load($term->vocabulary_machine_name)->vid;
+
+              // Add the term.
+              taxonomy_term_save($term);
+
+            }
+
+            // Use the first term result.
+            else {
+              $term = array_shift($matched_terms);
+            }
+
+            // Collect the term.
+            $terms[] = $term;
 
           }
 
-          // Use the first term result.
-          else {
-            $term = array_shift($matched_terms);
-          }
-
-          // Add the term to the node.
-          $new_node->$key->set($term);
+          // Add the term(s).
+          $term_data = ($is_multivalue) ? $terms : $terms[0];
+          $new_node->$key->set($term_data);
 
           break;
 
