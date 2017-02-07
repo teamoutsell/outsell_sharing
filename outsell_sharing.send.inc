@@ -65,7 +65,7 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
   $headers = array(
     'Content-Type: application/json',
     'Content-Length: ' . strlen($data),
-    'Authorization: Token ' . $apikey
+    'Authorization: ' . $apikey
   );
 
   // Start the curl.
