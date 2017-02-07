@@ -143,7 +143,7 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
 /**
  * Batch helper function to load an ID, send it and collect the result.
  */
-function outsell_sharing_send_node($nid, $sites, &$context) {
+function outsell_sharing_send_node($nid, $sites, $debug, &$context) {
 
   // Do some operation.
   $node = node_load($nid, NULL, TRUE);
@@ -161,18 +161,31 @@ function outsell_sharing_send_node($nid, $sites, &$context) {
     }
   }
 
+  // Collect failed data.
+  if ($debug && !isset($context['results']['bad_content'])) {
+    $context['results']['bad_content'] = array();
+  }
+
   // Ship the content and collect results.
   foreach ($sites as $site => $key) {
 
     // Get the result.
     $result = outsell_sharing_send_content('POST', $content, $site, $key);
 
-    // Increment our situation as appropriate.
+    // Increment our situations as appropriate.
     if ($result['code'] === 200) {
       $context['results'][$site]['succeeded'][] = $content['nid'];
     }
     else {
+
+      // Add the bad node.
       $context['results'][$site]['failed'][] = $content['nid'];
+
+      // Add debug results if needed.
+      if ($debug) {
+        $context['results']['bad_content'][] = drupal_json_encode($content);
+      }
+
     }
 
   }
@@ -186,6 +199,12 @@ function outsell_sharing_batch_finished($success, $results, $operations) {
 
   // Build meaningful messages.
   if ($success) {
+
+    // If we have "bad hombres" lets stash them for later.
+    if (isset($results['bad_content'])) {
+      $bad_content = $results['bad_content'];
+      unset($results['bad_content']);
+    }
 
     // Gather helpful info to report and log.
     foreach ($results as $site => $data) {
@@ -206,6 +225,11 @@ function outsell_sharing_batch_finished($success, $results, $operations) {
         watchdog('outsell_sharing', $success_message, $success_message_args, WATCHDOG_WARNING);
       }
 
+    }
+
+    // Also print out teh bad hombres if we have them.
+    if (!empty($bad_content)) {
+      drupal_set_message('<pre>' . print_r($bad_content, TRUE) . '</pre>', 'warning');
     }
 
   }

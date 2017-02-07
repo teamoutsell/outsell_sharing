@@ -68,14 +68,42 @@ function outsell_sharing_settings_form() {
     );
   }
 
-  // Add our batch submit handler.
-  $form['outsell_sharing_sender_config']['outsell_sharing_batch_description'] = array(
-    '#type' => 'markup',
-    '#markup' => t('<br><br>Click below to batch send content based on the above.<br>'),
+  // Options for batching.
+  $form['outsell_sharing_batch_config'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Batch send content'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name=\'outsell_sharing_sender\']' => array('checked' => TRUE),
+      )
+    )
   );
-  $form['outsell_sharing_sender_config']['submit'] = array(
+  $form['outsell_sharing_batch_config']['outsell_sharing_batch_description'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Some options to restrict the batch (good for testing).<br><br><br>'),
+  );
+  $form['outsell_sharing_batch_config']['outsell_sharing_batch_amount'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Amount to send per content type'),
+    '#description' => t('An integer value to limit the batch.'),
+    '#size' => 60,
+    '#maxlength' => 128
+  );
+  $form['outsell_sharing_batch_config']['outsell_sharing_batch_order'] = array(
+    '#type' => 'radios',
+    '#title' => t('Sorting criteria'),
+    '#description' => t('Sort the content by most recent or oldest.'),
+    '#default_value' => 'DESC',
+    '#options' => array('DESC' => t('Most recent content.'), 'ASC' => t('Oldest content.'))
+  );
+  $form['outsell_sharing_batch_config']['outsell_sharing_batch_debug'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Debug content that failed to send'),
+    '#description' => t('This will print an array of failed JSON objects when batch is done.')
+  );
+  $form['outsell_sharing_batch_config']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Batch send'),
+    '#value' => t('Send content'),
     '#submit' => array('outsell_sharing_sender_batch_submit'),
     '#validate' => array('outsell_sharing_sender_batch_validate')
   );
@@ -198,6 +226,9 @@ function outsell_sharing_sender_batch_validate($form, &$form_state) {
   if (empty($form_state['values']['outsell_sharing_sites'])) {
     form_set_error('Site', t('Need to specify at least one site!'));
   }
+  if ($form_state['values']['outsell_sharing_batch_amount'] && !is_numeric($form_state['values']['outsell_sharing_batch_amount'])) {
+    form_set_error('Batch', t('Batch amount needs to be an integer'));
+  }
 
 }
 
@@ -208,6 +239,9 @@ function outsell_sharing_sender_batch_submit($form, &$form_state) {
 
   // Get the available content types we can share.
   $allowed_content_types = outsell_sharing_node_info();
+
+  // Get the debug mode.
+  $debug = (bool) $form_state['values']['outsell_sharing_batch_debug'];
 
   // Get the sites we want to send to.
   $sites = list_extract_allowed_values($form_state['values']['outsell_sharing_sites'], 'list_text', FALSE);
@@ -227,8 +261,19 @@ function outsell_sharing_sender_batch_submit($form, &$form_state) {
   $sites_string = implode(', ', array_keys($sites));
   foreach ($content_types as $content_type) {
 
+    // Construct the query string.
+    $query = 'SELECT nid, created FROM {node} WHERE type = :type ORDER BY created ';
+
+    // Add the sort order.
+    $query .= $form_state['values']['outsell_sharing_batch_order'];
+
+    // If we have a batch amount let us add that in as well.
+    if ($form_state['values']['outsell_sharing_batch_amount']) {
+      $query .= ' LIMIT ' . $form_state['values']['outsell_sharing_batch_amount'];
+    }
+
     // Get the nodes.
-    $type_nids = db_query('SELECT nid FROM {node} WHERE type = :type LIMIT 10', array(':type' => $content_type))->fetchCol();
+    $type_nids = db_query($query, array(':type' => $content_type))->fetchCol();
     $type_nids_count = count($type_nids);
 
     // Tell the user WTFIGO.
@@ -254,7 +299,7 @@ function outsell_sharing_sender_batch_submit($form, &$form_state) {
   foreach ($nids as $nid) {
 
     // Build the op args.
-    $args = array($nid, $sites);
+    $args = array($nid, $sites, $debug);
 
     // Add an operation.
     $operations[] = array('outsell_sharing_send_node', $args);
