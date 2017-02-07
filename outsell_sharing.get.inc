@@ -139,15 +139,92 @@ function outsell_sharing_api_delete($uuid) {
  */
 function outsell_sharing_build_node($content) {
 
-  // Create an Entity.
-  $e = entity_create('node', $content);
+  // Create a base entity.
+  $e = entity_create('node', array('type' => $content['type']));
 
-  $entity = entity_metadata_wrapper('node', $e);
+  // Add in any non-fieldy meta-data.
+  foreach ($content as $key => $data) {
+    if (field_info_field($key) === NULL) {
+      $e->$key = $data;
+    }
+  }
 
-  $test = $test;
+  // Create the metadata wrapper.
+  $new_node = entity_metadata_wrapper('node', $e);
+
+  // Go through all the fields and build out the data.
+  foreach ($content as $key => $data) {
+    if (!empty($data) && field_info_field($key) !== NULL) {
+
+      // Make sure we are doing the correct thing with each type of field.
+      // @NOTE: drupal does not have a great unified way to attach data
+      switch (field_info_field($key)['type']) {
+
+        // Handle entityreference fields.
+        case 'entityreference':
+          break;
+
+        // Handle field_collection fields.
+        case 'field_collection':
+          break;
+
+        // Handle file fields.
+        case 'file':
+          break;
+
+        // Handle image fields.
+        case 'image':
+          break;
+
+        // Handle node_reference fields.
+        case 'node_reference':
+          break;
+
+        // Handle taxonomy_term_reference fields.
+        case 'taxonomy_term_reference':
+
+          // Grab matching terms.
+          $matched_terms = taxonomy_get_term_by_name($data['name'], $data['vocabulary_machine_name']);
+
+          // Add the term if it doesn't already exist.
+          if (empty($matched_terms)) {
+
+            // Start up a new term.
+            $term = (object) $data;
+
+            // Set the vocabulary id using the machine name.
+            $term->vid = taxonomy_vocabulary_machine_name_load($term->vocabulary_machine_name)->vid;
+
+            // Add the term.
+            taxonomy_term_save($term);
+
+          }
+
+          // Use the first term result.
+          else {
+            $term = array_shift($matched_terms);
+          }
+
+          // Add the term to the node.
+          $new_node->$key->set($term);
+
+          break;
+
+        // Handle user_reference fields.
+        case 'user_reference':
+          break;
+
+        // Handle every other field.
+        default:
+          $new_node->$key->set($data);
+      }
+
+    }
+
+  }
 
   // Save the node.
-  $entity->save();
+  $new_node->save();
 
 }
 
