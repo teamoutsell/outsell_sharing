@@ -139,18 +139,26 @@ function outsell_sharing_api_delete($uuid) {
  */
 function outsell_sharing_build_node($content) {
 
-  // Create a base entity.
-  $e = entity_create('node', array('type' => $content['type']));
+  // Try to find an existing node.
+  $node = array_shift(entity_uuid_load('node', array($content['uuid'])));
 
-  // Add in any non-fieldy meta-data.
-  foreach ($content as $key => $data) {
-    if (field_info_field($key) === NULL) {
-      $e->$key = $data;
+  // If node does not exist already lets spin up a new one
+  if (empty($node)) {
+
+    // Create a base entity.
+    $node = entity_create('node', array('type' => $content['type']));
+
+    // Add in any non-fieldy meta-data.
+    foreach ($content as $key => $data) {
+      if (field_info_field($key) === NULL) {
+        $node->$key = $data;
+      }
     }
+
   }
 
   // Create the metadata wrapper.
-  $new_node = entity_metadata_wrapper('node', $e);
+  $new_node = entity_metadata_wrapper('node', $node);
 
   // Go through all the fields and build out the data.
   foreach ($content as $key => $data) {
@@ -263,18 +271,13 @@ function outsell_sharing_api_upsert() {
   // We've gotten this far so its time to do some magic.
   switch ($_SERVER['REQUEST_METHOD']) {
 
-    // Create a new node.
+    // Create or update a node.
     case 'POST':
+    case 'PUT':
 
       // Get the new or updated entity.
       $entity = outsell_sharing_build_node($content);
 
-      break;
-
-    // Update an existing node.
-    case 'PUT':
-      print "PUTTED";
-      print_r($content);
       break;
 
     // Warn we are unsure of what to do with this request.
