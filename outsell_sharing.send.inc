@@ -8,29 +8,39 @@
 /**
  * Batch helper function to strip ids.
  */
-function outsell_sharing_strip_ids($data) {
+function outsell_sharing_strip_keys(&$data, $keys, &$counter = 0) {
 
-  // If data is not an array we are GTG.
-  if (!is_array($data) && !is_object($data)) {
+  // Increment the counter and evaluate.
+  $counter++;
+
+  // Only recurse 5 levels.
+  if ($counter >= 5) {
     return $data;
   }
 
-  // List of IDs to strip.
-  $bad_ids = array('vid', 'uid', 'vuuid', 'nid', 'fid', 'tid');
-
-  // Iterate through the object and remove any ids.
-  foreach ($data as $key => $value) {
-    if (in_array($key, $bad_ids)) {
-      if (is_array($data)) {
-        unset($data[$key]);
-      }
-      elseif (is_object($data)) {
-        unset($data->$key);
-      }
+  // Remove the keys.
+  if (is_array($data)) {
+    foreach ($keys as $key) {
+      unset($data[$key]);
+    }
+  }
+  elseif (is_object($data)) {
+    foreach ($keys as $key) {
+      unset($data->$key);
     }
   }
 
-  // Return the data.
+  // Go through other values and recurse.
+  foreach ($data as $index => &$value) {
+    if (is_array($value) || is_object($value)) {
+      outsell_sharing_strip_keys($value, $keys);
+    }
+    if (is_array($index)) {
+      outsell_sharing_strip_keys($index, $keys);
+    }
+  }
+
+  // Return result.
   return $data;
 
 }
@@ -43,23 +53,20 @@ function outsell_sharing_build_content($node) {
   // Define possible file fields that need contents loaded.
   $file_fields = array('file', 'image');
 
-  // Strip the node of IDs.
-  $node_stripped = outsell_sharing_strip_ids($node);
-
   // Get the metadata wrapper for the node.
-  $wrap_node = entity_metadata_wrapper('node', $node_stripped);
+  $wrap_node = entity_metadata_wrapper('node', $node);
 
   // Start a content collector.
   $content = array();
 
   // Go through all the fields and build out the data.
-  foreach ($node_stripped as $key => $data) {
+  foreach ($node as $key => $data) {
 
     // If this is a field lets use the emw.
     if (field_info_field($key) !== NULL) {
 
       // Get the field value and add it to our contents.
-      $content[$key] = outsell_sharing_strip_ids($wrap_node->$key->value());
+      $content[$key] = $wrap_node->$key->value();
 
       // Check if the field is a file field so we can grab the contents as well.
       if (in_array(field_info_field($key)['type'], $file_fields)) {
@@ -73,7 +80,7 @@ function outsell_sharing_build_content($node) {
 
     // Else return what we already have.
     else {
-      $content[$key] = outsell_sharing_strip_ids($data);
+      $content[$key] = $data;
     }
 
   }
@@ -91,8 +98,14 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
   // Build the URL.
   $url = $endpoint . '/outsell/sharing/api/share';
 
+  // Bad hombres.
+  $bad_ids = array('vid', 'uid', 'vuuid', 'nid', 'fid', 'tid');
+
+  // Recursively strip content of all relevant ids.
+  $stripped_content = outsell_sharing_strip_keys($content, $bad_ids);
+
   // JSONify our data.
-  $data = drupal_json_encode($content);
+  $data = drupal_json_encode($stripped_content);
 
   // Specify the headers.
   $headers = array(
@@ -169,17 +182,17 @@ function outsell_sharing_send_node($nid, $sites, $debug, &$context) {
   // Ship the content and collect results.
   foreach ($sites as $site => $key) {
 
-    // Get the result.
+    // Send and get the result.
     $result = outsell_sharing_send_content('POST', $content, $site, $key);
 
     // Increment our situations as appropriate.
     if ($result['code'] === 200) {
-      $context['results'][$site]['succeeded'][] = $content['nid'];
+      $context['results'][$site]['succeeded'][] = $content['uuid'];
     }
     else {
 
       // Add the bad node.
-      $context['results'][$site]['failed'][] = $content['nid'];
+      $context['results'][$site]['failed'][] = $content['uuid'];
 
       // Add debug results if needed.
       if ($debug) {

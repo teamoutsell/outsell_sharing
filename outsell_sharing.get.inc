@@ -173,7 +173,7 @@ function outsell_sharing_build_node($content) {
 
   // Go through all the fields and build out the data.
   foreach ($content as $key => $data) {
-    if (!empty($data) && field_info_field($key) !== NULL) {
+    if ($data && !empty($data) && field_info_field($key) !== NULL) {
 
       // Make sure we are doing the correct thing with each type of field.
       // @NOTE: drupal does not have a great unified way to attach data
