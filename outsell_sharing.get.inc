@@ -170,10 +170,24 @@ function outsell_sharing_build_node($content) {
 
         // Handle file fields.
         case 'file':
-          break;
-
-        // Handle image fields.
         case 'image':
+
+          // Get the file contents and destination.
+          $contents = base64_decode($data['data']);
+          $dest = $data['uri'];
+          $dirname = dirname($dest);
+
+          // Prepare the file directory.
+          // @todo: check for success
+          $created = file_prepare_directory($dirname, FILE_CREATE_DIRECTORY);
+
+          // Save the file.
+          // @NOTE: This can handle updating as well
+          $file = file_save_data($contents, $dest, FILE_EXISTS_REPLACE);
+
+          // Add the file to the node.
+          $new_node->$key->set(array_merge($data, (array) $file));
+
           break;
 
         // Handle node_reference fields.
