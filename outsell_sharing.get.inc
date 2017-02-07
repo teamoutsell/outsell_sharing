@@ -129,8 +129,19 @@ function outsell_sharing_api_delete($uuid) {
   // Build the content.
   $content = array('uuid' => $uuid);
 
-  // @todo: need to get the type before we validate.
-  print_r($content);
+  // Try to find an existing node.
+  $node = array_shift(entity_uuid_load('node', array($content['uuid'])));
+
+  // Add the type.
+  $content['type'] = $node->type;
+
+  // Validate our content.
+  if (!outsell_sharing_has_valid_props($content) || !outsell_sharing_has_valid_type($content['type'])) {
+    return;
+  }
+
+  // Delete the node.
+  node_delete($node->nid);
 
 }
 
@@ -142,7 +153,7 @@ function outsell_sharing_build_node($content) {
   // Try to find an existing node.
   $node = array_shift(entity_uuid_load('node', array($content['uuid'])));
 
-  // If node does not exist already lets spin up a new one
+  // If node does not exist already lets spin up a new one.
   if (empty($node)) {
 
     // Create a base entity.

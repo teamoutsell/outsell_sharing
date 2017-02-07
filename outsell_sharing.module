@@ -36,7 +36,7 @@ function outsell_sharing_menu() {
   // Sharing API delete endpoint.
   $menu['outsell/sharing/api/share/%'] = array(
     'page callback' => 'outsell_sharing_api_delete',
-    'page arguments' => array(1),
+    'page arguments' => array(4),
     'access callback' => 'outsell_sharing_api_auth',
     'file' => 'outsell_sharing.get.inc',
     'file path' => drupal_get_path('module', 'outsell_sharing'),
