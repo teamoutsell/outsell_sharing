@@ -242,6 +242,9 @@ function outsell_sharing_build_node($content) {
               // Set the vocabulary id using the machine name.
               $term->vid = taxonomy_vocabulary_machine_name_load($term->vocabulary_machine_name)->vid;
 
+              // Remove the term id.
+              unset($term->tid);
+
               // Add the term.
               taxonomy_term_save($term);
 

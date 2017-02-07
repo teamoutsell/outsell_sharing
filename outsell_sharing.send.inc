@@ -6,46 +6,6 @@
  */
 
 /**
- * Batch helper function to strip ids.
- */
-function outsell_sharing_strip_keys(&$data, $keys, &$counter = 0) {
-
-  // Increment the counter and evaluate.
-  $counter++;
-
-  // Only recurse 5 levels.
-  if ($counter >= 5) {
-    return $data;
-  }
-
-  // Remove the keys.
-  if (is_array($data)) {
-    foreach ($keys as $key) {
-      unset($data[$key]);
-    }
-  }
-  elseif (is_object($data)) {
-    foreach ($keys as $key) {
-      unset($data->$key);
-    }
-  }
-
-  // Go through other values and recurse.
-  foreach ($data as $index => &$value) {
-    if (is_array($value) || is_object($value)) {
-      outsell_sharing_strip_keys($value, $keys);
-    }
-    if (is_array($index)) {
-      outsell_sharing_strip_keys($index, $keys);
-    }
-  }
-
-  // Return result.
-  return $data;
-
-}
-
-/**
  * Batch helper function to expand the node.
  */
 function outsell_sharing_build_content($node) {
@@ -98,14 +58,8 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
   // Build the URL.
   $url = $endpoint . '/outsell/sharing/api/share';
 
-  // Bad hombres.
-  $bad_ids = array('vid', 'uid', 'vuuid', 'nid', 'fid', 'tid');
-
-  // Recursively strip content of all relevant ids.
-  $stripped_content = outsell_sharing_strip_keys($content, $bad_ids);
-
   // JSONify our data.
-  $data = drupal_json_encode($stripped_content);
+  $data = drupal_json_encode($content);
 
   // Specify the headers.
   $headers = array(
@@ -148,7 +102,8 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
   // Return result and code.
   return array(
     'code' => $code,
-    'result' => $result
+    'result' => $result,
+    'sent' => $data
   );
 
 }
@@ -196,7 +151,7 @@ function outsell_sharing_send_node($nid, $sites, $debug, &$context) {
 
       // Add debug results if needed.
       if ($debug) {
-        $context['results']['bad_content'][] = drupal_json_encode($content);
+        $context['results']['bad_content'][] = $result['sent'];
       }
 
     }
