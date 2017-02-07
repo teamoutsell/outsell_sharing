@@ -243,7 +243,7 @@ function outsell_sharing_sender_batch_submit($form, &$form_state) {
     drupal_set_message($message);
 
     // Add to our nids.
-    $nids += $type_nids;
+    $nids = array_merge($nids, $type_nids);
 
   }
 
