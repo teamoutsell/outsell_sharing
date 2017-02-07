@@ -135,6 +135,23 @@ function outsell_sharing_api_delete($uuid) {
 }
 
 /**
+ * Batch helper function to build a node from content.
+ */
+function outsell_sharing_build_node($content) {
+
+  // Create an Entity.
+  $e = entity_create('node', $content);
+
+  $entity = entity_metadata_wrapper('node', $e);
+
+  $test = $test;
+
+  // Save the node.
+  $entity->save();
+
+}
+
+/**
  * Helper function to route upsert requests.
  */
 function outsell_sharing_api_upsert() {
@@ -157,8 +174,10 @@ function outsell_sharing_api_upsert() {
 
     // Create a new node.
     case 'POST':
-      print "POSTED";
-      print_r($content);
+
+      // Get the new or updated entity.
+      $entity = outsell_sharing_build_node($content);
+
       break;
 
     // Update an existing node.
@@ -168,17 +187,9 @@ function outsell_sharing_api_upsert() {
       break;
 
     // Warn we are unsure of what to do with this request.
+    // NOTE: it should be impossible to arrive here.
     default:
-      print "QUE?";
+      outsell_sharing_set_bad_request('You have reached an unarrivable place', array());
   }
-
-}
-
-/**
- * Batch helper function to build a node from content.
- */
-function outsell_sharing_build_node($content) {
-
-  return $content;
 
 }
