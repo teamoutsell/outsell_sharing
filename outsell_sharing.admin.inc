@@ -159,6 +159,95 @@ function outsell_sharing_settings_form() {
 }
 
 /**
+ * Implements outsell_sharing_form_outsell_sharing_settings_form_alter().
+ *
+ * Checks to see if our sharing config is provided by the ENV and if it is lock it
+ * down so other things cannot edit it.
+ */
+function outsell_sharing_form_outsell_sharing_settings_form_alter(&$form, $form_state) {
+
+  // Check to see if we have ENVIRONMENTALLY INJECTED auth0 variables.
+  if (isset($_ENV['PLATFORM_VARIABLES']) && !empty($_ENV['PLATFORM_VARIABLES'])) {
+
+    // Decode our variables.
+    $variables = json_decode(base64_decode($_ENV['PLATFORM_VARIABLES']), TRUE);
+
+    // Define fields we expect to be managed.
+    // NOTE: Variable name => location in form data (only works one level deep)
+    $expected_settings = array(
+      'outsell_sharing_getter' => 'outsell_sharing_config',
+      'outsell_sharing_sender' => 'outsell_sharing_config',
+      'outsell_sharing_apikey' => 'outsell_sharing_getter_config'
+    );
+
+    // Get the available content types we can share.
+    $content_types = outsell_sharing_node_info();
+
+    // Loop through our content types and add options for each type.
+    foreach ($content_types as $type => $data) {
+      $expected_settings['outsell_sharing_get_' . $type] = 'outsell_sharing_getter_config';
+      $expected_settings['outsell_sharing_send_' . $type] = 'outsell_sharing_sender_config';
+    }
+
+    // Collect fields that actually are managed.
+    $managed_settings = array();
+
+    // Loop through our fields and disable ones that are set and non-empty.
+    foreach ($expected_settings as $variable => $location) {
+
+      // Construct variable key.
+      $variable_key = implode(':', array('drupal', $variable));
+
+      // Disable the form element if we have a value for it.
+      if (isset($variables[$variable_key])) {
+        $form[$location][$variable]['#disabled'] = TRUE;
+        $managed_settings[] = $variable;
+
+      }
+
+    }
+
+    // Provide some extra magic for the API key regen button.
+    if ($form['outsell_sharing_getter_config']['outsell_sharing_apikey']['#disabled']) {
+      $form['outsell_sharing_getter_config']['outsell_sharing_apikey_refresh']['#disabled'] = TRUE;
+    }
+
+    // Inform the user of this managed status.
+    if (isset($managed_settings) && !empty($managed_settings)) {
+
+      // The message.
+      $msg = 'The following fields are managed by the PLATFORM_VARIABLES environmental variable:';
+      $msg .= theme_item_list(array(
+        'items' => $managed_settings,
+        'title' => '',
+        'attributes' => array(),
+        'type' => 'ol'
+      ));
+      $msg .= 'They will be disabled while this is true. ';
+      $msg .= 'For more information about how this works ';
+      $msg .= l(
+        t('read more.'),
+        'https://docs.platform.sh/development/variables.html',
+        array('attributes' => array('target' => '_blank'))
+      );
+
+      // Construct the markup field.
+      $enviro_notice = array(
+        '#prefix' => '<div class="messages status">',
+        '#markup' => t($msg),
+        '#suffix' => '</div>'
+      );
+
+      // Add to the begining of our form.
+      array_unshift($form, $enviro_notice);
+
+    }
+
+  }
+
+}
+
+/**
  * Helper function to regenerate the api key.
  */
 function outsell_sharing_regenerate_apikey_ajax($form, $form_state) {
