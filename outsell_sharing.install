@@ -29,7 +29,7 @@ function outsell_sharing_uninstall() {
  * This update will "drain the swamp" eg remove cruft from our older
  * openid/tethys login implementation.
  */
-function outsell_sharing_update_7001() {
+function outsell_sharing_update_7002() {
 
   // Batch purge older fields if they exist.
   $legacy_fields = array(
