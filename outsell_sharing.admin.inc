@@ -208,7 +208,8 @@ function outsell_sharing_form_outsell_sharing_settings_form_alter(&$form, $form_
     }
 
     // Provide some extra magic for the API key regen button.
-    if ($form['outsell_sharing_getter_config']['outsell_sharing_apikey']['#disabled']) {
+    $outsell_sharing_apikey_form = $form['outsell_sharing_getter_config']['outsell_sharing_apikey'];
+    if (isset($outsell_sharing_apikey_form['#disabled']) && $outsell_sharing_apikey_form['#disabled']) {
       $form['outsell_sharing_getter_config']['outsell_sharing_apikey_refresh']['#disabled'] = TRUE;
     }
 
