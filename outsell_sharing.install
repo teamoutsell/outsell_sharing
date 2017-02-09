@@ -31,6 +31,36 @@ function outsell_sharing_uninstall() {
  */
 function outsell_sharing_update_7002() {
 
+  // Drush kill string.
+
+  /*
+
+  drush field-delete field_categorie_regions \
+    field_data_field_file \
+    field_data_field_guid \
+    field_data_field_headline_topic \
+    field_implications \
+    field_industry_segment \
+    field_keywords \
+    field_long_name \
+    field_news_image \
+    field_number_of_pages \
+    field_outsell_opinion \
+    field_outsell_post_id \
+    field_outsell_term_id \
+    field_outsell_term_old_id \
+    field_peer_reviewer \
+    field_price \
+    field_priority \
+    field_report_image \
+    field_report_type \
+    field_short_description \
+    field_source \
+    field_summary \
+    field_toc
+
+   */
+
   // SQL kill string.
   /*
 
@@ -46,6 +76,8 @@ function outsell_sharing_update_7002() {
   drop table field_revision_field_implications; \
   drop table field_data_field_industry_segment; \
   drop table field_revision_field_industry_segment; \
+  drop table field_data_field_keywords; \
+  drop table field_revision_field_keywords; \
   drop table field_data_field_long_name; \
   drop table field_revision_field_long_name; \
   drop table field_data_field_news_image; \
@@ -90,6 +122,7 @@ function outsell_sharing_update_7002() {
     'field_headline_topic',
     'field_implications',
     'field_industry_segment',
+    'field_keywords',
     'field_long_name',
     'field_news_image',
     'field_number_of_pages',

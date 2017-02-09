@@ -47,17 +47,7 @@ function outsell_sharing_set_bad_request($message, $options) {
 function outsell_sharing_has_valid_type($type) {
 
   // Check to see if this is an allowed type.
-  $valid_type = variable_get('outsell_sharing_get_' . $type, FALSE);
-
-  // If unallowed type let's also kick this out.
-  if (!$valid_type) {
-    $type_error_msg = 'Node type %type not allowed.';
-    $type_error_msg_options = array('%type' => $type);
-    outsell_sharing_set_bad_request($type_error_msg, $type_error_msg_options);
-  }
-
-  // Return valid type.
-  return $valid_type;
+  return variable_get('outsell_sharing_get_' . $type, FALSE);
 
 }
 
