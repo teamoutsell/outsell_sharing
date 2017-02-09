@@ -36,15 +36,13 @@ If you **are** using platform.sh and kalabox make sure you `kbox pullenv && kbox
 
 ### Receiving content
 
-In the configuration page above you will want to select *Allow this site to get content from other sites*. This will trigger an additional set of *Configure Getting
-* options. Select the content types you want to receive and then save the form.
+In the configuration page above you will want to select *Allow this site to get content from other sites*. This will trigger an additional set of *Configure Getting* options. Select the content types you want to receive and then save the form.
 
 **NOTE:** If you plan on sending content from another site to this site, copy the API key since you will need this.
 
 ### Sending content
 
-In the configuration page above you will want to select *Allow this site to send content to other sites.*. This will trigger an additional set of *Configure Sending
-* options.
+In the configuration page above you will want to select *Allow this site to send content to other sites.*. This will trigger an additional set of *Configure Sending* options.
 
 Enter a list of sites you want to send content to along with the API keys for those sites. These sites must also have installed this module and have API keys configured. See *Recieving Content* above on how to get the API key. Here is an example:
 
