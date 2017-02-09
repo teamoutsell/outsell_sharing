@@ -31,6 +31,56 @@ function outsell_sharing_uninstall() {
  */
 function outsell_sharing_update_7002() {
 
+  // SQL kill string.
+  /*
+
+  drop table field_data_field_categorie_regions; \
+  drop table field_revision_field_categorie_regions; \
+  drop table field_data_field_file; \
+  drop table field_revision_field_file; \
+  drop table field_data_field_guid; \
+  drop table field_revision_field_guid; \
+  drop table field_data_field_headline_topic; \
+  drop table field_revision_field_headline_topic; \
+  drop table field_data_field_implications; \
+  drop table field_revision_field_implications; \
+  drop table field_data_field_industry_segment; \
+  drop table field_revision_field_industry_segment; \
+  drop table field_data_field_long_name; \
+  drop table field_revision_field_long_name; \
+  drop table field_data_field_news_image; \
+  drop table field_revision_field_news_image; \
+  drop table field_data_field_number_of_pages; \
+  drop table field_revision_field_number_of_pages; \
+  drop table field_data_field_outsell_opinion; \
+  drop table field_revision_field_outsell_opinion; \
+  drop table field_data_field_outsell_post_id; \
+  drop table field_revision_field_outsell_post_id; \
+  drop table field_data_field_outsell_term_id; \
+  drop table field_revision_field_outsell_term_id; \
+  drop table field_data_field_outsell_term_old_id; \
+  drop table field_revision_field_outsell_term_old_id; \
+  drop table field_data_field_peer_reviewer; \
+  drop table field_revision_field_peer_reviewer; \
+  drop table field_data_field_price; \
+  drop table field_revision_field_price; \
+  drop table field_data_field_priority; \
+  drop table field_revision_field_priority; \
+  drop table field_data_field_report_image; \
+  drop table field_revision_field_report_image; \
+  drop table field_data_field_report_type; \
+  drop table field_revision_field_report_type; \
+  drop table field_data_field_short_description; \
+  drop table field_revision_field_short_description; \
+  drop table field_data_field_source; \
+  drop table field_revision_field_source; \
+  drop table field_data_field_summary; \
+  drop table field_revision_field_summary; \
+  drop table field_data_field_toc; \
+  drop table field_revision_field_toc;
+
+   */
+
   // Batch purge older fields if they exist.
   $legacy_fields = array(
     'field_company',
