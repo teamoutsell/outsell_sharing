@@ -19,12 +19,18 @@ function outsell_sharing_ctools_plugin_api($module = NULL, $api = NULL) {
  */
 function outsell_sharing_eck_bundle_info() {
   $items = array(
+    'company_company' => array(
+      'machine_name' => 'company_company',
+      'entity_type' => 'company',
+      'name' => 'company',
+      'label' => 'Company',
+    ),
     'segment_segment' => array(
       'machine_name' => 'segment_segment',
       'entity_type' => 'segment',
       'name' => 'segment',
       'label' => 'Segment',
-    ),
+    )
   );
   return $items;
 }
@@ -34,6 +40,17 @@ function outsell_sharing_eck_bundle_info() {
  */
 function outsell_sharing_eck_entity_type_info() {
   $items = array(
+    'company' => array(
+      'name' => 'company',
+      'label' => 'Company',
+      'properties' => array(
+        'title' => array(
+          'label' => 'Title',
+          'type' => 'text',
+          'behavior' => 'title',
+        ),
+      ),
+    ),
     'segment' => array(
       'name' => 'segment',
       'label' => 'Segment',
@@ -44,7 +61,7 @@ function outsell_sharing_eck_entity_type_info() {
           'behavior' => 'title',
         ),
       ),
-    ),
+    )
   );
   return $items;
 }
