@@ -149,7 +149,7 @@ function outsell_sharing_build_node($content) {
     // Create a base entity.
     $node = entity_create('node', array('type' => $content['type']));
 
-    // Add in any non-fieldy meta-data.
+    // Add in any non-fieldy meta-data (properties).
     foreach ($content as $key => $data) {
       if (field_info_field($key) === NULL) {
         $node->$key = $data;
@@ -171,6 +171,21 @@ function outsell_sharing_build_node($content) {
 
         // Handle entityreference fields.
         case 'entityreference':
+
+          $ids = array();
+          foreach ($data as $datum) {
+            $sql = db_query(
+              "select id from eck_segment where title like :datum",
+              array(
+                ':datum' => '%' . db_like($datum['title']) . '%',
+              )
+            );
+            foreach ($sql as $s) {
+              $ids[] = $s->id;
+            }
+          }
+          $new_node->$key->set($ids);
+
           break;
 
         // Handle field_collection fields.
