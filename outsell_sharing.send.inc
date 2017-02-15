@@ -40,7 +40,8 @@ function outsell_sharing_build_node($node) {
     // Check for the $node->uid, load the user and send user info along too.
     elseif ($key == 'uid') {
       $user = user_load($data, TRUE);
-      $content[$key][]['user'] = $user;
+      $content[$key] = $data;
+      $content['user'] = $user;
     }
     // Else return what we already have.
     else {
