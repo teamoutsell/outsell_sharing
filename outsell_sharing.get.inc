@@ -151,7 +151,21 @@ function outsell_sharing_build_node($content) {
 
     // Add in any non-fieldy meta-data (properties).
     foreach ($content as $key => $data) {
-      if (field_info_field($key) === NULL) {
+      if ($key == 'user') {
+        $user = user_load_by_mail($data['mail']);
+        if ($user) {
+          $node->uid = $user->uid;
+        }
+        else {
+          $mail = $data['mail'];
+          watchdog('Outsell Sharing', "The user does not exist on recieving site: $mail.", array(), WATCHDOG_NOTICE, 'link');
+          // We may eventuatlly create new users when they do not exist.
+          //_create_new_user($data);
+          // For now if the user from editors DNE on receiving site give uid 1.
+          $node->uid = 1;
+        }
+      }
+      elseif (field_info_field($key) === NULL) {
         $node->$key = $data;
       }
     }
@@ -163,6 +177,20 @@ function outsell_sharing_build_node($content) {
 
   // Go through all the fields and build out the data.
   foreach ($content as $key => $data) {
+    if ($key == 'user') {
+        $user = user_load_by_mail($data['mail']);
+        if ($user) {
+          $node->uid = $user->uid;
+        }
+        else {
+          $mail = $data['mail'];
+          watchdog('Outsell Sharing', "The user does not exist on recieving site: $mail.", array(), WATCHDOG_NOTICE, 'link');
+          // We may eventuatlly create new users when they do not exist.
+          //_create_new_user($data);
+          // For now if the user from editors DNE on receiving site give uid 1.
+          $node->uid = 1;
+        }
+    }
     if ($data && !empty($data) && field_info_field($key) !== NULL) {
 
       // Make sure we are doing the correct thing with each type of field.
@@ -326,3 +354,16 @@ function outsell_sharing_api_upsert() {
   }
 
 }
+
+/**
+ * Helper function to create a user.
+ *
+ * @param $user
+ *  The drupal_json_decod'ed user data from the editors site.
+ *
+ * We are currently not creating or updating users.  I left in the function
+ * stub in case it is decided to implement this.
+ */
+// function _create_new_user($user) {
+//   // Create a base entity.
+// }
