@@ -42,6 +42,8 @@ function outsell_sharing_build_node($node) {
       $user = user_load($data, TRUE);
       $content[$key] = $data;
       $content['user'] = $user;
+      // Remove uid key as it is part of the user data.
+      unset($content['uid']);
     }
     // Else return what we already have.
     else {
