@@ -148,3 +148,11 @@ function outsell_sharing_segment_explorer_segments_preprocess($segments) {
 
   return $segments;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function outsell_sharing_form_insight_node_form_alter(&$form, &$form_state, $form_id) {
+  // Disable the tlid field; only populate programmatically.
+  $form['field_tlid']['#disabled'] = TRUE;
+}
