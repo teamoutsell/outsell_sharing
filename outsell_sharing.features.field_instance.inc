@@ -20,10 +20,7 @@ function outsell_sharing_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'text',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'text_default',
         'weight' => 1,
       ),
@@ -80,12 +77,9 @@ function outsell_sharing_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'text',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'text_default',
-        'weight' => 12,
+        'weight' => 8,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -129,10 +123,7 @@ function outsell_sharing_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'taxonomy',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
         'weight' => 3,
       ),
@@ -179,8 +170,6 @@ function outsell_sharing_field_default_field_instances() {
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -237,7 +226,7 @@ function outsell_sharing_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 8,
+        'weight' => 10,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -281,10 +270,7 @@ function outsell_sharing_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'text',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'text_default',
         'weight' => 2,
       ),
@@ -330,10 +316,7 @@ function outsell_sharing_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'taxonomy',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
         'weight' => 5,
       ),
@@ -379,7 +362,7 @@ function outsell_sharing_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 11,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -432,7 +415,7 @@ function outsell_sharing_field_default_field_instances() {
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 12,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -477,10 +460,7 @@ function outsell_sharing_field_default_field_instances() {
       'default' => array(
         'label' => 'above',
         'module' => 'user_reference',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'user_reference_default',
         'weight' => 6,
       ),
@@ -527,7 +507,7 @@ It will be hidden in the node add/edit form.',
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 13,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -580,8 +560,6 @@ It will be hidden in the node add/edit form.',
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
@@ -632,7 +610,7 @@ It will be hidden in the node add/edit form.',
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 11,
+        'weight' => 14,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -693,10 +671,7 @@ It will be hidden in the node add/edit form.',
       'default' => array(
         'label' => 'hidden',
         'module' => 'text',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'text_default',
         'weight' => 0,
       ),
@@ -741,10 +716,9 @@ It will be hidden in the node add/edit form.',
     'display' => array(
       'default' => array(
         'label' => 'above',
-        'module' => 'text',
         'settings' => array(),
-        'type' => 'text_default',
-        'weight' => 13,
+        'type' => 'hidden',
+        'weight' => 15,
       ),
       'group_teaser' => array(
         'label' => 'above',
