@@ -8,7 +8,7 @@
 /**
  * Batch helper function to expand the node.
  */
-function outsell_sharing_build_content($node) {
+function outsell_sharing_build_node($node) {
 
   // Define possible file fields that need contents loaded.
   $file_fields = array('file', 'image');
@@ -37,7 +37,16 @@ function outsell_sharing_build_content($node) {
       }
 
     }
-
+    // Check for the $node->uid, load the user and send user info along too.
+    elseif ($key == 'uid') {
+      $user = user_load($data, TRUE);
+      $content[$key] = $data;
+      $content['user'] = $user;
+      // Remove uid key as it is part of the user data.
+      unset($content['uid']);
+      // Remove the password.
+      unset($content['pass']);
+    }
     // Else return what we already have.
     else {
       $content[$key] = $data;
@@ -117,7 +126,7 @@ function outsell_sharing_send_node($nid, $sites, $debug, &$context) {
   $node = node_load($nid, NULL, TRUE);
 
   // Build the content.
-  $content = outsell_sharing_build_content($node);
+  $content = outsell_sharing_build_node($node);
 
   // Set up our initial results array if needed.
   foreach ($sites as $site => $key) {
@@ -195,7 +204,7 @@ function outsell_sharing_batch_finished($success, $results, $operations) {
 
     }
 
-    // Also print out teh bad hombres if we have them.
+    // Also print out the bad hombres if we have them.
     if (!empty($bad_content)) {
       drupal_set_message('<pre>' . print_r($bad_content, TRUE) . '</pre>', 'warning');
     }

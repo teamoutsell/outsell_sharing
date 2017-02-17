@@ -24,13 +24,15 @@ function outsell_sharing_eck_bundle_info() {
       'entity_type' => 'company',
       'name' => 'company',
       'label' => 'Company',
+      'config' => array(),
     ),
     'segment_segment' => array(
       'machine_name' => 'segment_segment',
       'entity_type' => 'segment',
       'name' => 'segment',
       'label' => 'Segment',
-    )
+      'config' => array(),
+    ),
   );
   return $items;
 }
@@ -49,6 +51,26 @@ function outsell_sharing_eck_entity_type_info() {
           'type' => 'text',
           'behavior' => 'title',
         ),
+        'company_id' => array(
+          'label' => 'Company ID',
+          'type' => 'integer',
+          'behavior' => 'uuid',
+        ),
+        'company_size' => array(
+          'label' => 'Current Number of Employees',
+          'type' => 'integer',
+          'behavior' => '',
+        ),
+        'established' => array(
+          'label' => 'Year Established',
+          'type' => 'integer',
+          'behavior' => '',
+        ),
+        'blocked' => array(
+          'label' => 'Blocked',
+          'type' => 'integer',
+          'behavior' => '',
+        ),
       ),
     ),
     'segment' => array(
@@ -61,7 +83,7 @@ function outsell_sharing_eck_entity_type_info() {
           'behavior' => 'title',
         ),
       ),
-    )
+    ),
   );
   return $items;
 }

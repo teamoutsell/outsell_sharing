@@ -140,8 +140,16 @@ function outsell_sharing_api_delete($uuid) {
  */
 function outsell_sharing_build_node($content) {
 
-  // Try to find an existing node.
-  $node = array_shift(entity_uuid_load('node', array($content['uuid'])));
+  // Get node query.
+  $query = 'SELECT nid FROM {node} WHERE uuid = :uuid ORDER BY created LIMIT 1';
+
+  // Get the node id.
+  $id = array_shift(db_query($query, array(':uuid' => $content['uuid']))->fetchCol());
+
+  // Try to find an existing node if we have an id.
+  if ($id) {
+    $node = node_load($id);
+  }
 
   // If node does not exist already lets spin up a new one.
   if (empty($node)) {
@@ -149,13 +157,29 @@ function outsell_sharing_build_node($content) {
     // Create a base entity.
     $node = entity_create('node', array('type' => $content['type']));
 
-    // Add in any non-fieldy meta-data.
+    // Add in any non-fieldy meta-data (properties).
     foreach ($content as $key => $data) {
       if (field_info_field($key) === NULL) {
         $node->$key = $data;
       }
     }
 
+  }
+
+  // Handle user mapping.
+  if ($content['user']['mail']) {
+    $user = user_load_by_mail($content['user']['mail']);
+    if ($user) {
+      $node->uid = $user->uid;
+    }
+    else {
+      $mail = $content['user']['mail'];
+      watchdog('Outsell Sharing', "The user does not exist on recieving site: $mail.", array(), WATCHDOG_NOTICE, 'link');
+      // We may eventuatlly create new users when they do not exist.
+      // _create_new_user($data);
+      // For now if the user from editors DNE on receiving site give uid 1.
+      $node->uid = 1;
+    }
   }
 
   // Create the metadata wrapper.
@@ -171,6 +195,22 @@ function outsell_sharing_build_node($content) {
 
         // Handle entityreference fields.
         case 'entityreference':
+
+          $ids = array();
+          foreach ($data as $datum) {
+            $eck = 'eck_' . $datum['type'];
+            $sql = db_query(
+              "select id from $eck where title like :datum",
+              array(
+                ':datum' => '%' . db_like($datum['title']) . '%',
+              )
+            );
+            foreach ($sql as $s) {
+              $ids[] = $s->id;
+            }
+          }
+          $new_node->$key->set($ids);
+
           break;
 
         // Handle field_collection fields.
@@ -311,3 +351,17 @@ function outsell_sharing_api_upsert() {
   }
 
 }
+
+/**
+ * Helper function to create a user.
+ *
+ * @param $user
+ *  The drupal_json_decod'ed user data from the editors site.
+ *
+ * We are currently not creating or updating users.  I left in the function
+ * stub in case it is decided to implement this.
+ *
+ * function _create_new_user($user) {
+ *   // Create a base entity.
+ * }
+ */
