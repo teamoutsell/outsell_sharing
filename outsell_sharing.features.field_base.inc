@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.features.field_base.inc
@@ -82,7 +81,7 @@ function outsell_sharing_field_default_field_bases() {
           ),
         ),
         'sort' => array(
-          'direction' => 'ASC',
+          'direction' => 'DESC',
           'property' => 'title',
           'type' => 'property',
         ),
