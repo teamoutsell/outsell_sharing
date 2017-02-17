@@ -140,8 +140,16 @@ function outsell_sharing_api_delete($uuid) {
  */
 function outsell_sharing_build_node($content) {
 
-  // Try to find an existing node.
-  $node = array_shift(entity_uuid_load('node', array($content['uuid'])));
+  // Get node query.
+  $query = 'SELECT nid FROM {node} WHERE uuid = :uuid ORDER BY created LIMIT 1';
+
+  // Get the node id.
+  $id = array_shift(db_query($query, array(':uuid' => $content['uuid']))->fetchCol());
+
+  // Try to find an existing node if we have an id.
+  if ($id) {
+    $node = node_load($id);
+  }
 
   // If node does not exist already lets spin up a new one.
   if (empty($node)) {
@@ -151,25 +159,27 @@ function outsell_sharing_build_node($content) {
 
     // Add in any non-fieldy meta-data (properties).
     foreach ($content as $key => $data) {
-      if ($key == 'user') {
-        $user = user_load_by_mail($data['mail']);
-        if ($user) {
-          $node->uid = $user->uid;
-        }
-        else {
-          $mail = $data['mail'];
-          watchdog('Outsell Sharing', "The user does not exist on recieving site: $mail.", array(), WATCHDOG_NOTICE, 'link');
-          // We may eventuatlly create new users when they do not exist.
-          // _create_new_user($data);
-          // For now if the user from editors DNE on receiving site give uid 1.
-          $node->uid = 1;
-        }
-      }
-      elseif (field_info_field($key) === NULL) {
+      if (field_info_field($key) === NULL) {
         $node->$key = $data;
       }
     }
 
+  }
+
+  // Handle user mapping.
+  if ($content['user']['mail']) {
+    $user = user_load_by_mail($content['user']['mail']);
+    if ($user) {
+      $node->uid = $user->uid;
+    }
+    else {
+      $mail = $content['user']['mail'];
+      watchdog('Outsell Sharing', "The user does not exist on recieving site: $mail.", array(), WATCHDOG_NOTICE, 'link');
+      // We may eventuatlly create new users when they do not exist.
+      // _create_new_user($data);
+      // For now if the user from editors DNE on receiving site give uid 1.
+      $node->uid = 1;
+    }
   }
 
   // Create the metadata wrapper.
@@ -177,20 +187,6 @@ function outsell_sharing_build_node($content) {
 
   // Go through all the fields and build out the data.
   foreach ($content as $key => $data) {
-    if ($key == 'user') {
-      $user = user_load_by_mail($data['mail']);
-      if ($user) {
-        $node->uid = $user->uid;
-      }
-      else {
-        $mail = $data['mail'];
-        watchdog('Outsell Sharing', "The user does not exist on recieving site: $mail.", array(), WATCHDOG_NOTICE, 'link');
-        // We may eventuatlly create new users when they do not exist.
-        // _create_new_user($data);
-        // For now if the user from editors DNE on receiving site give uid 1.
-        $node->uid = 1;
-      }
-    }
     if ($data && !empty($data) && field_info_field($key) !== NULL) {
 
       // Make sure we are doing the correct thing with each type of field.

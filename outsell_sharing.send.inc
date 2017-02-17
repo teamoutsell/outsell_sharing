@@ -44,6 +44,8 @@ function outsell_sharing_build_node($node) {
       $content['user'] = $user;
       // Remove uid key as it is part of the user data.
       unset($content['uid']);
+      // Remove the password.
+      unset($content['pass']);
     }
     // Else return what we already have.
     else {
