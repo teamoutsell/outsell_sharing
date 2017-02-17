@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.features.inc
@@ -50,26 +49,6 @@ function outsell_sharing_eck_entity_type_info() {
           'label' => 'Title',
           'type' => 'text',
           'behavior' => 'title',
-        ),
-        'company_id' => array(
-          'label' => 'Company ID',
-          'type' => 'integer',
-          'behavior' => 'uuid',
-        ),
-        'company_size' => array(
-          'label' => 'Current Number of Employees',
-          'type' => 'integer',
-          'behavior' => '',
-        ),
-        'established' => array(
-          'label' => 'Year Established',
-          'type' => 'integer',
-          'behavior' => '',
-        ),
-        'blocked' => array(
-          'label' => 'Blocked',
-          'type' => 'integer',
-          'behavior' => '',
         ),
       ),
     ),

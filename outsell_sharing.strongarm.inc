@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.strongarm.inc
@@ -193,6 +192,12 @@ function outsell_sharing_strongarm() {
         ),
         'scheduler_settings' => array(
           'weight' => '7',
+        ),
+        'path' => array(
+          'weight' => '30',
+        ),
+        'redirect' => array(
+          'weight' => '30',
         ),
       ),
       'display' => array(),
