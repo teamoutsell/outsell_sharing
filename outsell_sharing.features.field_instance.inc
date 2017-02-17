@@ -789,10 +789,7 @@ It will be hidden in the node add/edit form.',
       'default' => array(
         'label' => 'hidden',
         'module' => 'text',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'text_default',
         'weight' => 1,
       ),
@@ -840,12 +837,9 @@ It will be hidden in the node add/edit form.',
       'default' => array(
         'label' => 'above',
         'module' => 'taxonomy',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
-        'weight' => 8,
+        'weight' => 7,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -882,12 +876,10 @@ It will be hidden in the node add/edit form.',
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 7,
+        'weight' => 6,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -938,10 +930,7 @@ It will be hidden in the node add/edit form.',
       'default' => array(
         'label' => 'above',
         'module' => 'taxonomy',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
         'weight' => 5,
       ),
@@ -980,10 +969,7 @@ It will be hidden in the node add/edit form.',
       'default' => array(
         'label' => 'above',
         'module' => 'taxonomy',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'taxonomy_term_reference_plain',
         'weight' => 4,
       ),
@@ -1028,8 +1014,6 @@ It will be hidden in the node add/edit form.',
         'label' => 'hidden',
         'module' => 'image',
         'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
           'image_link' => '',
           'image_style' => 'large',
         ),
@@ -1086,10 +1070,7 @@ It will be hidden in the node add/edit form.',
       'default' => array(
         'label' => 'above',
         'module' => 'text',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'text_default',
         'weight' => 2,
       ),
@@ -1132,7 +1113,7 @@ It will be hidden in the node add/edit form.',
         'label' => 'above',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 9,
+        'weight' => 10,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -1176,7 +1157,7 @@ It will be hidden in the node add/edit form.',
         'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
-        'weight' => 10,
+        'weight' => 11,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -1214,12 +1195,10 @@ It will be hidden in the node add/edit form.',
         'label' => 'above',
         'module' => 'entityreference',
         'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
           'link' => FALSE,
         ),
         'type' => 'entityreference_label',
-        'weight' => 11,
+        'weight' => 8,
       ),
       'group_teaser' => array(
         'label' => 'above',
@@ -1268,10 +1247,7 @@ It will be hidden in the node add/edit form.',
       'default' => array(
         'label' => 'above',
         'module' => 'link',
-        'settings' => array(
-          'conditions' => array(),
-          'field_formatter_class' => '',
-        ),
+        'settings' => array(),
         'type' => 'link_url',
         'weight' => 3,
       ),
@@ -1321,6 +1297,71 @@ It will be hidden in the node add/edit form.',
       'settings' => array(),
       'type' => 'link_field',
       'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'node-news-field_tlid'.
+  $field_instances['node-news-field_tlid'] = array(
+    'bundle' => 'news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 12,
+      ),
+      'group_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tlid',
+    'label' => 'tlid',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'comments' => 'comments',
+          'filtered_html' => 'filtered_html',
+          'full_html' => 'full_html',
+          'plain_text' => 'plain_text',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'comments' => array(
+              'weight' => 0,
+            ),
+            'filtered_html' => array(
+              'weight' => 0,
+            ),
+            'full_html' => array(
+              'weight' => 1,
+            ),
+            'plain_text' => array(
+              'weight' => 10,
+            ),
+          ),
+        ),
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 32,
     ),
   );
 

@@ -239,6 +239,12 @@ function outsell_sharing_strongarm() {
       'token' => array(
         'custom_settings' => FALSE,
       ),
+      'group_teaser' => array(
+        'custom_settings' => TRUE,
+      ),
+      'revision' => array(
+        'custom_settings' => FALSE,
+      ),
     ),
     'extra_fields' => array(
       'form' => array(
@@ -247,6 +253,12 @@ function outsell_sharing_strongarm() {
         ),
         'flag' => array(
           'weight' => '9',
+        ),
+        'path' => array(
+          'weight' => '30',
+        ),
+        'redirect' => array(
+          'weight' => '30',
         ),
       ),
       'display' => array(),
