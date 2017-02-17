@@ -198,8 +198,9 @@ function outsell_sharing_build_node($content) {
 
           $ids = array();
           foreach ($data as $datum) {
+            $eck = 'eck_' . $datum['type'];
             $sql = db_query(
-              "select id from eck_segment where title like :datum",
+              "select id from $eck where title like :datum",
               array(
                 ':datum' => '%' . db_like($datum['title']) . '%',
               )
