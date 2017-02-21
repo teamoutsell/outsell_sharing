@@ -140,6 +140,10 @@ function outsell_sharing_api_delete($uuid) {
  */
 function outsell_sharing_build_node($content) {
 
+  // @debug find any tethys nodes.
+  // The tethys legacy ID string.
+  $tlid = _map_tethys_nodes($content['title']);
+  return;
   // Get node query.
   $query = 'SELECT nid FROM {node} WHERE uuid = :uuid ORDER BY created LIMIT 1';
 
@@ -309,6 +313,13 @@ function outsell_sharing_build_node($content) {
 
   }
 
+  // The tethys legacy ID string.
+  $tlid = _map_tethys_nodes($content['title']);
+  watchdog('my tlid ----->', 'message:: ' . $tlid . ' ::', array(), WATCHDOG_NOTICE, 'link');
+  if (!empty($tlid)) {
+    $new_node->field_tlid->set($tlid);
+  }
+
   // Save the node.
   $new_node->save();
 
@@ -365,3 +376,32 @@ function outsell_sharing_api_upsert() {
  *   // Create a base entity.
  * }
  */
+
+/**
+ * Helper function to map old tethys ID strings to tlid field on Drupal nodes.
+ *
+ * @param string $title
+ *   The title from the $content json object from the outsell_sharing api.
+ *
+ * @return string $tlid
+ *   The tethys lecacy ID string; for example: 'entity:d7entity/61044:und'.
+ */
+function _map_tethys_nodes($title) {
+  $sql = "select nid from node where type='tethys' and title=:title limit 1";
+  $result = db_query($sql, array(':title' => $title));
+  foreach ($result as $r) {
+    $node = node_load($r->nid);
+  }
+  if ($node) {
+    $tlid = ($node->field_entity_id) ? $node->field_entity_id['und'][0]['value'] : '';
+  }
+  // @debug
+  if (!empty($tlid)) {
+    watchdog('', "\n\n\n" . 'message::::::' . "got one: $node->title :: tlid: $tlid\n\n\n", array(), WATCHDOG_NOTICE, 'link');
+    $f = fopen('build_node_log', 'w+');
+      fwrite($f, $node->nid . '::' . $node->title . '::' . $tlid);
+    fclose($f);
+  }
+  // end @debug
+  return $tlid;
+}

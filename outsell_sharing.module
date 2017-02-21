@@ -148,3 +148,7 @@ function outsell_sharing_segment_explorer_segments_preprocess($segments) {
 
   return $segments;
 }
+
+function outsell_sharing_form_alter(&$form, &$form_state, $form_id) {
+  dpm($form_id);
+}
