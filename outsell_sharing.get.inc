@@ -140,10 +140,6 @@ function outsell_sharing_api_delete($uuid) {
  */
 function outsell_sharing_build_node($content) {
 
-  // @debug find any tethys nodes.
-  // The tethys legacy ID string.
-  $tlid = _map_tethys_nodes($content['title']);
-  return;
   // Get node query.
   $query = 'SELECT nid FROM {node} WHERE uuid = :uuid ORDER BY created LIMIT 1';
 
