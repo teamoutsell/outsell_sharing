@@ -1,8 +1,8 @@
 <?php
 
 /**
- * @file outsell_sharing.drush.inc.
- *  Drush wrapper functions for outesll_sharing API.
+ * @file
+ * Drush wrapper functions for outsell_sharing API.
  *
  * Primary role at this time is to be able to run the sharing batches on cli.
  *
@@ -33,7 +33,7 @@ function outsell_sharing_drush_command() {
     'callback' => 'outsell_sharing_send',
     'options' => array(
       'amount' => dt('Amount to send per content type.  This defaults to 0; which will send all the nodes of type: `insight`, `news`, and `reports`.'),
-      // 'types' => dt('The types to send (insight, news, reports).'),
+      // 'types' => dt('The types to send (insight, news, reports).'), TODO: allow overriding of types in the future.
       'oss-debug' => dt('Turn on debug logging defaults to FALSE.  With `oss-debug` set to TRUE the json output of the failed nodes is output to stdio for further inspection.'),
       'sites' => dt('The URLs of the sites you wish to share to. By default this will pull from the sites that are configured via the configuration form but you can override that value(s) here if you wish.'),
     ),
@@ -51,7 +51,7 @@ function outsell_sharing_drush_command() {
  * Command callback for outsell_sharing_send.
  */
 function outsell_sharing_send() {
-  require_once(__DIR__ . '/../outsell_sharing.admin.inc');
+  require_once __DIR__ . '/../outsell_sharing.admin.inc';
   $amount = drush_get_option('amount', '0');
   $my_sites = drush_get_option('sites', '');
   $form_state = array();
@@ -70,10 +70,6 @@ function outsell_sharing_send() {
   $form = outsell_sharing_settings_form();
 
   $form_state['values']['outsell_sharing_sites'] = list_allowed_values_string($form_state['values']['outsell_sharing_sites']);
-  // Call the submit handler for /admin/config/outsell/sharing
-  //outsell_sharing_sender_batch_submit($form, $form_state);
 
   drupal_form_submit('outsell_sharing_sender_batch_submit', $form_state);
-  //drupal_form_submit('outsell_sharing_settings_form', $form_state);
-  drush_print_r('made it');
 }

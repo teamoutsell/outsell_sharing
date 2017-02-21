@@ -315,7 +315,8 @@ function outsell_sharing_build_node($content) {
 
   // The tethys legacy ID string.
   $tlid = _map_tethys_nodes($content['title']);
-  watchdog('my tlid ----->', 'message:: ' . $tlid . ' ::', array(), WATCHDOG_NOTICE, 'link');
+
+  // watchdog('my tlid ----->', 'message:: ' . $tlid . ' ::', array(), WATCHDOG_NOTICE, 'link'); @debug.
   if (!empty($tlid)) {
     $new_node->field_tlid->set($tlid);
   }
@@ -383,7 +384,7 @@ function outsell_sharing_api_upsert() {
  * @param string $title
  *   The title from the $content json object from the outsell_sharing api.
  *
- * @return string $tlid
+ * @return string
  *   The tethys lecacy ID string; for example: 'entity:d7entity/61044:und'.
  */
 function _map_tethys_nodes($title) {
@@ -395,13 +396,6 @@ function _map_tethys_nodes($title) {
   if ($node) {
     $tlid = ($node->field_entity_id) ? $node->field_entity_id['und'][0]['value'] : '';
   }
-  // @debug
-  if (!empty($tlid)) {
-    watchdog('', "\n\n\n" . 'message::::::' . "got one: $node->title :: tlid: $tlid\n\n\n", array(), WATCHDOG_NOTICE, 'link');
-    $f = fopen('build_node_log', 'w+');
-      fwrite($f, $node->nid . '::' . $node->title . '::' . $tlid);
-    fclose($f);
-  }
-  // end @debug
+
   return $tlid;
 }
