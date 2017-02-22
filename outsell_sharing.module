@@ -43,6 +43,13 @@ function outsell_sharing_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  // Redirects for tethys legacy paths.
+  $menu['d7entity/%'] = array(
+    'page callback' => 'outsell_sharing_tethys_redirects',
+    'page arguments' => array(1),
+    'access arguments' => array('access content'),
+  );
+
   return $menu;
 }
 
@@ -147,4 +154,31 @@ function outsell_sharing_segment_explorer_segments_preprocess($segments) {
   }
 
   return $segments;
+}
+
+/**
+ * Menu callback outsell_sharing_tethys_redirects().
+ *
+ * Redirect users using lecacy URL structures to the corresponding Drupal nodes.
+ *
+ * @param string $tlid
+ *   The tethys legacy id passed in as arg(1) from legacy URL structure.
+ */
+function outsell_sharing_tethys_redirects($tlid) {
+  $sql = "select entity_id, field_tlid_value
+    from field_data_field_tlid
+    where field_tlid_value like '%" . db_like($tlid) . "%'
+    limit 1";
+
+  $result = db_query($sql);
+  $tlid_num = '';
+  foreach ($result as $r) {
+    $tlid_num = $r->entity_id;
+  }
+  if ($tlid_num != '') {
+    drupal_goto("node/$tlid_num", array(), '301');
+  }
+  else {
+    drupal_goto('front');
+  }
 }
