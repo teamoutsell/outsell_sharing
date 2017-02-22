@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.features.field_instance.inc
@@ -11,60 +10,6 @@
 function outsell_sharing_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'company-company-field_address'.
-  $field_instances['company-company-field_address'] = array(
-    'bundle' => 'company',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'addressfield',
-        'settings' => array(
-          'format_handlers' => array(
-            0 => 'address',
-          ),
-          'use_widget_handlers' => 1,
-        ),
-        'type' => 'addressfield_default',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'company',
-    'field_name' => 'field_address',
-    'label' => 'HQ Location ',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'addressfield',
-      'settings' => array(
-        'available_countries' => array(),
-        'default_country' => 'site_default',
-        'format_handlers' => array(
-          'address' => 'address',
-          'address-hide-postal-code' => 0,
-          'address-hide-street' => 0,
-          'address-hide-country' => 0,
-          'organisation' => 0,
-          'name-full' => 0,
-          'name-oneline' => 0,
-          'address-optional' => 0,
-        ),
-      ),
-      'type' => 'addressfield_standard',
-      'weight' => 34,
-    ),
-  );
   // Exported field_instance: 'company-company-field_company'.
   $field_instances['company-company-field_company'] = array(
     'bundle' => 'company',
@@ -118,6 +63,7 @@ function outsell_sharing_field_default_field_instances() {
       'weight' => 36,
     ),
   );
+
   // Exported field_instance: 'company-company-field_new_id'.
   $field_instances['company-company-field_new_id'] = array(
     'bundle' => 'company',
@@ -163,6 +109,7 @@ function outsell_sharing_field_default_field_instances() {
       'weight' => 4,
     ),
   );
+
   // Exported field_instance: 'company-company-field_old_id'.
   $field_instances['company-company-field_old_id'] = array(
     'bundle' => 'company',
@@ -208,6 +155,7 @@ function outsell_sharing_field_default_field_instances() {
       'weight' => 3,
     ),
   );
+
   // Exported field_instance: 'company-company-field_segment'.
   $field_instances['company-company-field_segment'] = array(
     'bundle' => 'company',
@@ -256,6 +204,7 @@ function outsell_sharing_field_default_field_instances() {
       'weight' => 32,
     ),
   );
+
   // Exported field_instance: 'company-company-field_short_description'.
   $field_instances['company-company-field_short_description'] = array(
     'bundle' => 'company',
@@ -323,6 +272,7 @@ function outsell_sharing_field_default_field_instances() {
       'weight' => 38,
     ),
   );
+
   // Exported field_instance: 'company-company-field_url'.
   $field_instances['company-company-field_url'] = array(
     'bundle' => 'company',
@@ -1255,66 +1205,6 @@ It will be hidden in the node add/edit form.',
     ),
   );
 
-  // Exported field_instance: 'node-insight-title_field'.
-  $field_instances['node-insight-title_field'] = array(
-    'bundle' => 'insight',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 17,
-      ),
-      'full' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 18,
-      ),
-      'group_teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 18,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'title_field',
-    'label' => 'Title',
-    'required' => TRUE,
-    'settings' => array(
-      'hide_label' => array(
-        'entity' => 0,
-        'page' => 0,
-      ),
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => -5,
-    ),
-  );
-
   // Exported field_instance: 'node-news-body'.
   $field_instances['node-news-body'] = array(
     'bundle' => 'news',
@@ -2003,66 +1893,6 @@ It will be hidden in the node add/edit form.',
       'settings' => array(),
       'type' => 'link_field',
       'weight' => 10,
-    ),
-  );
-
-  // Exported field_instance: 'node-news-title_field'.
-  $field_instances['node-news-title_field'] = array(
-    'bundle' => 'news',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'full' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 7,
-      ),
-      'group_teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 11,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'title_field',
-    'label' => 'Title',
-    'required' => TRUE,
-    'settings' => array(
-      'hide_label' => array(
-        'entity' => 0,
-        'page' => 0,
-      ),
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => -5,
     ),
   );
 
@@ -2877,66 +2707,6 @@ It will be hidden in the node add/edit form.',
     ),
   );
 
-  // Exported field_instance: 'node-report-title_field'.
-  $field_instances['node-report-title_field'] = array(
-    'bundle' => 'report',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'full' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 18,
-      ),
-      'group_teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'search_index' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 10,
-      ),
-    ),
-    'entity_type' => 'node',
-    'field_name' => 'title_field',
-    'label' => 'Title',
-    'required' => TRUE,
-    'settings' => array(
-      'hide_label' => array(
-        'entity' => 0,
-        'page' => 0,
-      ),
-      'text_processing' => 0,
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'module' => 'text',
-      'settings' => array(
-        'size' => 60,
-      ),
-      'type' => 'text_textfield',
-      'weight' => -5,
-    ),
-  );
-
   // Exported field_instance: 'segment-segment-field_new_id'.
   $field_instances['segment-segment-field_new_id'] = array(
     'bundle' => 'segment',
@@ -3358,7 +3128,6 @@ It will be hidden in the node add/edit form.',
   t('Company');
   t('Description');
   t('File');
-  t('HQ Location ');
   t('Headline topic');
   t('ID');
   t('Important Details');
@@ -3386,7 +3155,6 @@ It will be hidden in the node add/edit form.',
   t('This field is used for mapping Insights during migration.');
   t('This field is used to backup the publish_on value and reset it after scheduler published the content.
 It will be hidden in the node add/edit form.');
-  t('Title');
   t('Url');
   t('Why This Matters');
   t('campaign');

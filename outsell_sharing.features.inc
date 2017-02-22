@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.features.inc
@@ -24,14 +23,12 @@ function outsell_sharing_eck_bundle_info() {
       'entity_type' => 'company',
       'name' => 'company',
       'label' => 'Company',
-      'config' => array(),
     ),
     'segment_segment' => array(
       'machine_name' => 'segment_segment',
       'entity_type' => 'segment',
       'name' => 'segment',
       'label' => 'Segment',
-      'config' => array(),
     ),
   );
   return $items;

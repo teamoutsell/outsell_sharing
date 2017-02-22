@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.features.field_base.inc
