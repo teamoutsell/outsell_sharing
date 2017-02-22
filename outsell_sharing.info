@@ -101,6 +101,7 @@ features[field_instance][] = node-news-field_outsell_post_id
 features[field_instance][] = node-news-field_priority
 features[field_instance][] = node-news-field_segment
 features[field_instance][] = node-news-field_source
+features[field_instance][] = node-news-field_tlid
 features[field_instance][] = node-report-body
 features[field_instance][] = node-report-field_categorie_regions
 features[field_instance][] = node-report-field_company

@@ -268,12 +268,22 @@ function outsell_sharing_strongarm() {
         'flag' => array(
           'weight' => '9',
         ),
+        'path' => array(
+          'weight' => '30',
+        ),
+        'redirect' => array(
+          'weight' => '30',
+        ),
       ),
       'display' => array(
         'flag_like' => array(
           'teaser' => array(
             'weight' => '3',
             'visible' => TRUE,
+          ),
+          'default' => array(
+            'weight' => '10',
+            'visible' => FALSE,
           ),
         ),
       ),
