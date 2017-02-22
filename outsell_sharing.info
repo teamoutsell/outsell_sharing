@@ -114,6 +114,7 @@ features[field_instance][] = node-report-field_report_image
 features[field_instance][] = node-report-field_report_type
 features[field_instance][] = node-report-field_segment
 features[field_instance][] = node-report-field_short_description
+features[field_instance][] = node-report-field_tlid
 features[field_instance][] = node-report-field_toc
 features[field_instance][] = segment-segment-field_new_id
 features[field_instance][] = segment-segment-field_segment_code
