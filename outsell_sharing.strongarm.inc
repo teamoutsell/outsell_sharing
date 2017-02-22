@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.strongarm.inc
@@ -199,6 +198,12 @@ function outsell_sharing_strongarm() {
         ),
         'scheduler_settings' => array(
           'weight' => '7',
+        ),
+        'path' => array(
+          'weight' => '30',
+        ),
+        'redirect' => array(
+          'weight' => '30',
         ),
       ),
       'display' => array(
@@ -515,6 +520,27 @@ function outsell_sharing_strongarm() {
   $strongarm->name = 'node_submitted_report';
   $strongarm->value = 1;
   $export['node_submitted_report'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_insight_pattern';
+  $strongarm->value = 'outsell_research/insights/[node:title]';
+  $export['pathauto_node_insight_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_news_pattern';
+  $strongarm->value = 'outsell_research/news/[node:title]';
+  $export['pathauto_node_news_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_report_pattern';
+  $strongarm->value = 'outsell_research/reports/[node:title]';
+  $export['pathauto_node_report_pattern'] = $strongarm;
 
   return $export;
 }
