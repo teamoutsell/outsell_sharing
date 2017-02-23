@@ -70,14 +70,29 @@ By default Kalabox is not great with multi-site communication so you will need t
   2. Run `docker inspect SITENAME_web_1 | grep IPAddress` on each receiving site and make a note of the IP for each site.
   3. Open up the `kalabox-compose.yml` for each "sending site" and add the following lines to the `appserver` service based on what you got back in #2.
 
-    ```
+    ```yml
     extra_hosts:
-    - "site1.kbox.site:172.17.0.10"
-    - "site2.kbox.site:172.17.0.12"
+      - "site1.kbox.site:172.17.0.10"
+      - "site2.kbox.site:172.17.0.12"
     ```
 
   4. Restart each sending site.
   5. profit
+
+There is also a drush command to run the batch send from cli.  Similar to running the batch from the Drupal UI you need to set up the `extra_hosts` networking in the drush service; like so:
+
+  ```yml
+  #
+  # Drush
+  #
+  drush:
+   extra_hosts:
+     - "community.kbox.site:{IP_ADDRESS}"
+  #########################################
+  ```
+where {IP_ADDRESS} is replaced with the ip address of the recieving container.  You can get the ip address for the Community site with the command: `docker inspect community_web_1 |grep IPAddreess`.
+
+The drush command is `drush outsell-sharing-send --amount=X` where `X` is an integer amount of each node type you would like to send.  You can see the full help with `drush help oss`.
 
 Debugging
 ---------

@@ -10,6 +10,61 @@
 function outsell_sharing_field_default_field_instances() {
   $field_instances = array();
 
+  // Exported field_instance: 'company-company-field_address'.
+  $field_instances['company-company-field_address'] = array(
+    'bundle' => 'company',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'addressfield',
+        'settings' => array(
+          'format_handlers' => array(
+            0 => 'address',
+          ),
+          'use_widget_handlers' => 1,
+        ),
+        'type' => 'addressfield_default',
+        'weight' => 1,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'company',
+    'field_name' => 'field_address',
+    'label' => 'HQ Location ',
+    'required' => 0,
+    'settings' => array(
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'addressfield',
+      'settings' => array(
+        'available_countries' => array(),
+        'default_country' => 'site_default',
+        'format_handlers' => array(
+          'address' => 'address',
+          'address-hide-postal-code' => 0,
+          'address-hide-street' => 0,
+          'address-hide-country' => 0,
+          'organisation' => 0,
+          'name-full' => 0,
+          'name-oneline' => 0,
+          'address-optional' => 0,
+        ),
+      ),
+      'type' => 'addressfield_standard',
+      'weight' => 34,
+    ),
+  );
+
   // Exported field_instance: 'company-company-field_company'.
   $field_instances['company-company-field_company'] = array(
     'bundle' => 'company',
@@ -1205,6 +1260,89 @@ It will be hidden in the node add/edit form.',
     ),
   );
 
+  // Exported field_instance: 'node-insight-field_tlid'.
+  $field_instances['node-insight-field_tlid'] = array(
+    'bundle' => 'insight',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Store legacy tethys id path: like d7entity/#####.  So we can create redirects from legacy paths to the new content store.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 24,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'group_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tlid',
+    'label' => 'tlid',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'comments' => 'comments',
+          'filtered_html' => 'filtered_html',
+          'full_html' => 'full_html',
+          'plain_text' => 'plain_text',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'comments' => array(
+              'weight' => 0,
+            ),
+            'filtered_html' => array(
+              'weight' => 0,
+            ),
+            'full_html' => array(
+              'weight' => 1,
+            ),
+            'plain_text' => array(
+              'weight' => 10,
+            ),
+          ),
+        ),
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 31,
+    ),
+  );
+
   // Exported field_instance: 'node-news-body'.
   $field_instances['node-news-body'] = array(
     'bundle' => 'news',
@@ -1893,6 +2031,89 @@ It will be hidden in the node add/edit form.',
       'settings' => array(),
       'type' => 'link_field',
       'weight' => 10,
+    ),
+  );
+
+  // Exported field_instance: 'node-news-field_tlid'.
+  $field_instances['node-news-field_tlid'] = array(
+    'bundle' => 'news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Store legacy tethys id path: like d7entity/#####.  So we can create redirects from legacy paths to the new content store.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 12,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'group_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tlid',
+    'label' => 'tlid',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'comments' => 'comments',
+          'filtered_html' => 'filtered_html',
+          'full_html' => 'full_html',
+          'plain_text' => 'plain_text',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'comments' => array(
+              'weight' => 0,
+            ),
+            'filtered_html' => array(
+              'weight' => 0,
+            ),
+            'full_html' => array(
+              'weight' => 1,
+            ),
+            'plain_text' => array(
+              'weight' => 10,
+            ),
+          ),
+        ),
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 32,
     ),
   );
 
@@ -2647,6 +2868,89 @@ It will be hidden in the node add/edit form.',
     ),
   );
 
+  // Exported field_instance: 'node-report-field_tlid'.
+  $field_instances['node-report-field_tlid'] = array(
+    'bundle' => 'report',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => 'Store legacy tethys id path: like d7entity/#####.  So we can create redirects from legacy paths to the new content store.',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 13,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'group_teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'search_index' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_tlid',
+    'label' => 'tlid',
+    'required' => 0,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'comments' => 'comments',
+          'filtered_html' => 'filtered_html',
+          'full_html' => 'full_html',
+          'plain_text' => 'plain_text',
+        ),
+        'allowed_formats_toggle' => 0,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'comments' => array(
+              'weight' => 0,
+            ),
+            'filtered_html' => array(
+              'weight' => 0,
+            ),
+            'full_html' => array(
+              'weight' => 1,
+            ),
+            'plain_text' => array(
+              'weight' => 10,
+            ),
+          ),
+        ),
+      ),
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 32,
+    ),
+  );
+
   // Exported field_instance: 'node-report-field_toc'.
   $field_instances['node-report-field_toc'] = array(
     'bundle' => 'report',
@@ -3149,6 +3453,7 @@ It will be hidden in the node add/edit form.',
   t('Scheduled date');
   t('Segment');
   t('Source');
+  t('Store legacy tethys id path: like d7entity/#####.  So we can create redirects from legacy paths to the new content store.');
   t('Summary');
   t('Table of Contents');
   t('The old content id. This field is used during migration to map this content to the old content.');
@@ -3160,6 +3465,7 @@ It will be hidden in the node add/edit form.');
   t('campaign');
   t('guid');
   t('mail_date');
+  t('tlid');
 
   return $field_instances;
 }

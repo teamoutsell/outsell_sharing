@@ -199,6 +199,12 @@ function outsell_sharing_strongarm() {
         'scheduler_settings' => array(
           'weight' => '7',
         ),
+        'path' => array(
+          'weight' => '30',
+        ),
+        'redirect' => array(
+          'weight' => '30',
+        ),
       ),
       'display' => array(
         'flag_like' => array(
@@ -262,12 +268,22 @@ function outsell_sharing_strongarm() {
         'flag' => array(
           'weight' => '9',
         ),
+        'path' => array(
+          'weight' => '30',
+        ),
+        'redirect' => array(
+          'weight' => '30',
+        ),
       ),
       'display' => array(
         'flag_like' => array(
           'teaser' => array(
             'weight' => '3',
             'visible' => TRUE,
+          ),
+          'default' => array(
+            'weight' => '10',
+            'visible' => FALSE,
           ),
         ),
       ),
@@ -317,6 +333,12 @@ function outsell_sharing_strongarm() {
         'scheduler_settings' => array(
           'weight' => '12',
         ),
+        'path' => array(
+          'weight' => '30',
+        ),
+        'redirect' => array(
+          'weight' => '30',
+        ),
       ),
       'display' => array(
         'flag_like' => array(
@@ -326,6 +348,10 @@ function outsell_sharing_strongarm() {
           ),
           'full' => array(
             'weight' => '17',
+            'visible' => FALSE,
+          ),
+          'default' => array(
+            'weight' => '10',
             'visible' => FALSE,
           ),
         ),
