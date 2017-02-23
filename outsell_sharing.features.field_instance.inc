@@ -3433,7 +3433,6 @@ It will be hidden in the node add/edit form.',
   t('Company');
   t('Description');
   t('File');
-  t('HQ Location ');
   t('Headline topic');
   t('ID');
   t('Important Details');

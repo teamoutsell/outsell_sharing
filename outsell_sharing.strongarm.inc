@@ -36,14 +36,14 @@ function outsell_sharing_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_mode_insight';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['comment_default_mode_insight'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_default_mode_news';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['comment_default_mode_news'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -78,14 +78,14 @@ function outsell_sharing_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_form_location_insight';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['comment_form_location_insight'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_form_location_news';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['comment_form_location_news'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -99,7 +99,7 @@ function outsell_sharing_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_insight';
-  $strongarm->value = '2';
+  $strongarm->value = '1';
   $export['comment_insight'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -120,7 +120,7 @@ function outsell_sharing_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_preview_news';
-  $strongarm->value = '1';
+  $strongarm->value = '0';
   $export['comment_preview_news'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -141,14 +141,14 @@ function outsell_sharing_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_subject_field_insight';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['comment_subject_field_insight'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'comment_subject_field_news';
-  $strongarm->value = 1;
+  $strongarm->value = 0;
   $export['comment_subject_field_news'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -555,6 +555,13 @@ function outsell_sharing_strongarm() {
   $strongarm->name = 'pathauto_node_news_pattern';
   $strongarm->value = 'outsell_research/news/[node:title]';
   $export['pathauto_node_news_pattern'] = $strongarm;
+
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'pathauto_node_page_pattern';
+  $strongarm->value = '';
+  $export['pathauto_node_page_pattern'] = $strongarm;
 
   $strongarm = new stdClass();
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
