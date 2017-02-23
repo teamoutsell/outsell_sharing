@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * outsell_sharing.features.user_permission.inc
