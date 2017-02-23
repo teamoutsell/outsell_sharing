@@ -134,3 +134,57 @@ function outsell_sharing_update_7002() {
   field_purge_batch(1);
 
 }
+
+/**
+ * Implements hook_update().
+ *
+ * Add legacy tlid_and_title table to map legacy tlid's for redirect logic.
+ */
+function outsell_sharing_update_7003() {
+  db_query("
+    CREATE TABLE `tlid_and_title` (
+      `item_id` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'The primary identifier of the item',
+      `classification_horizontal` bigint(20) DEFAULT NULL COMMENT 'The field''s value for this item',
+      `classification_vertical` bigint(20) DEFAULT NULL COMMENT 'The field''s value for this item',
+      `search_bundle` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'The field''s value for this item',
+      `search_api_language` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'The field''s value for this item',
+      `entity_d7entity_title` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'The field''s value for this item',
+      `entity_d7entity_created` bigint(20) DEFAULT NULL COMMENT 'The field''s value for this item',
+      `entity_d7entity_field_industry_segment_name` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'The field''s value for this item',
+      `entity_d7entity_company` bigint(20) DEFAULT NULL COMMENT 'The field''s value for this item',
+      KEY `_classification_horizontal` (`classification_horizontal`),
+      KEY `_classification_vertical` (`classification_vertical`),
+      KEY `_search_bundle` (`search_bundle`(10)),
+      KEY `_search_api_language` (`search_api_language`(10)),
+      KEY `_entity_d7entity_title` (`entity_d7entity_title`(10)),
+      KEY `_entity_d7entity_created` (`entity_d7entity_created`),
+      KEY `_entity_d7entity_field_industry_segment_name` (`entity_d7entity_field_industry_segment_name`(10)),
+      KEY `_entity_d7entity_company` (`entity_d7entity_company`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  ");
+}
+
+/**
+ * Implements hook_update().
+ *
+ * Add legacy tlid_and_title data to the table.
+ *
+ * This is dependent on the file tlid_and_title.csv being present in the
+ * private files directory.
+ */
+function outsell_sharing_update_7004() {
+  $path = variable_get('file_private_path');
+  if (file_exists("$path/tlid_and_title.csv")) {
+    $file = file("$path/tlid_and_title.csv");
+    foreach ($file as $f) {
+      $fields = str_getcsv($f);
+      $row = db_insert('tlid_and_title')
+        ->fields(array(
+          'item_id' => $fields[0],
+          'search_bundle' => $fields[3],
+          'entity_d7entity_title' => $fields[5],
+        ))
+        ->execute();
+    }
+  }
+}
