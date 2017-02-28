@@ -36,6 +36,9 @@ function outsell_sharing_drush_command() {
       // 'types' => dt('The types to send (insight, news, reports).'), TODO: allow overriding of types in the future.
       'oss-debug' => dt('Turn on debug logging defaults to FALSE.  With `oss-debug` set to TRUE the json output of the failed nodes is output to stdio for further inspection.'),
       'sites' => dt('The URLs of the sites you wish to share to. By default this will pull from the sites that are configured via the configuration form but you can override that value(s) here if you wish.'),
+      'order' => dt('The order to select the nodes: asc (oldest), desc (newest)'),
+      'min' => dt("The minimum nid; i.e. select nodes that are bigger than or equal to this number."),
+      'max' => dt("The maximum nid; i.e. select nodes that are less than or equal to this number."),
     ),
     'required-arguments' => FALSE,
     'aliases' => array('oss'),
@@ -53,6 +56,9 @@ function outsell_sharing_drush_command() {
 function outsell_sharing_send() {
   require_once __DIR__ . '/../outsell_sharing.admin.inc';
   $amount = drush_get_option('amount', '0');
+  $order = drush_get_option('order', variable_get('outsell_sharing_batch_order', 'desc'));
+  $min = drush_get_option('min');
+  $max = drush_get_option('max');
   $my_sites = drush_get_option('sites', '');
   $form_state = array();
   $form_state['values']['outsell_sharing_batch_debug'] = drush_get_option('oss-debug', FALSE);
@@ -67,6 +73,9 @@ function outsell_sharing_send() {
   $form_state['values']['outsell_sharing_send_report'] = variable_get('outsell_sharing_send_report');
   $form_state['values']['outsell_sharing_batch_order'] = variable_get('outsell_sharing_batch_order');
   $form_state['values']['outsell_sharing_batch_amount'] = $amount;
+  $form_state['values']['outsell_sharing_batch_order'] = $order;
+  $form_state['values']['min'] = $min;
+  $form_state['values']['max'] = $max;
   $form = outsell_sharing_settings_form();
 
   $form_state['values']['outsell_sharing_sites'] = list_allowed_values_string($form_state['values']['outsell_sharing_sites']);
