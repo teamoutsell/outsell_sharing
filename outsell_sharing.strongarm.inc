@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.strongarm.inc
@@ -284,6 +283,10 @@ function outsell_sharing_strongarm() {
           ),
           'default' => array(
             'weight' => '10',
+            'visible' => FALSE,
+          ),
+          'full' => array(
+            'weight' => '16',
             'visible' => FALSE,
           ),
         ),
