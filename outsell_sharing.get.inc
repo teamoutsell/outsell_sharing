@@ -148,7 +148,7 @@ function outsell_sharing_build_node($content) {
 
   // Try to find an existing node if we have an id.
   if ($id) {
-    $node = node_load($id);
+    $node = node_load($id, NULL, TRUE);
   }
 
   // If node does not exist already lets spin up a new one.
@@ -200,9 +200,9 @@ function outsell_sharing_build_node($content) {
           foreach ($data as $datum) {
             $eck = 'eck_' . $datum['type'];
             $sql = db_query(
-              "select id from $eck where title like :datum",
+              "select id from $eck where title = :datum",
               array(
-                ':datum' => '%' . db_like($datum['title']) . '%',
+                ':datum' => $datum['title'],
               )
             );
             foreach ($sql as $s) {
@@ -387,7 +387,7 @@ function _map_tethys_nodes($title) {
   $sql = "select nid from node where type='tethys' and title=:title limit 1";
   $result = db_query($sql, array(':title' => $title));
   foreach ($result as $r) {
-    $node = node_load($r->nid);
+    $node = node_load($r->nid, NULL, TRUE);
   }
   if ($node) {
     $tlid = ($node->field_entity_id) ? $node->field_entity_id['und'][0]['value'] : '';
