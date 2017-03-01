@@ -122,6 +122,9 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
  */
 function outsell_sharing_send_node($nid, $sites, $debug, &$context) {
 
+  // @debug gff.
+  drush_print_r('got one :: ' . $nid);
+
   // Do some operation.
   $node = node_load($nid, NULL, TRUE);
 
@@ -206,7 +209,32 @@ function outsell_sharing_batch_finished($success, $results, $operations) {
 
     // Also print out the bad hombres if we have them.
     if (!empty($bad_content)) {
-      drupal_set_message('<pre>' . print_r($bad_content, TRUE) . '</pre>', 'warning');
+      // @DEBUG I took this out in favour of the logging for debug, but put it back when done.
+      // drupal_set_message('<pre>' . print_r($bad_content, TRUE) . '</pre>', 'warning');
+      $f = fopen('gff.html', 'w');
+      fwrite($f, '<html>' . "\n");
+      fwrite($f, '<body>' . "\n");
+      $i = 0;
+      foreach ($bad_content as $b) {
+        $my_baddies = json_decode($b);
+        drush_print_r($my_baddies->title);
+        drush_print_r($my_baddies->nid);
+        drush_print_r('created: ' . date('d F Y', $my_baddies->created));
+        drush_print_r('changed: ' . date('d F Y', $my_baddies->changed));
+        drush_print_r('--------------------------------------------------');
+        fwrite(
+          $f,
+          "<a href=\"http://test-oscqb4wiwfxzy.us.platform.sh/node/$my_baddies->nid\">$my_baddies->title</a>\t\t" .
+          "nid: $my_baddies->nid\t\t" .
+          'created: ' . date('d F Y', $my_baddies->created) . "\t\t" .
+          'changed: ' . date('d F Y', $my_baddies->changed) . "<br />\n"
+        );
+        $i++;
+      }
+      fwrite($f, 'total: ' . $i . "\n");
+      fwrite($f, '</body>' . "\n");
+      fwrite($f, '</html>' . "\n");
+      fclose($f);
     }
 
   }
