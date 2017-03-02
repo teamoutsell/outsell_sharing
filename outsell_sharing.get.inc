@@ -92,7 +92,6 @@ function outsell_sharing_get_body() {
   }
 
   // Attempt to parse the data.
-  $raw_data = form_safe_json($raw_data);
   $data = drupal_json_decode($raw_data);
 
   // Make sure the json is parsed correctly. If not watchdog, error and return.
@@ -105,21 +104,6 @@ function outsell_sharing_get_body() {
   // Return what we have.
   return $data;
 
-}
-
-/**
- * Helper function to make string replacements so that  json_decode can parse.
- *
- * @param string $json
- *   A string of JSON data to perform replacements on.
- */
-function form_safe_json($json) {
-  $json = empty($json) ? '[]' : $json;
-  $search = array('\\', "\n", "\r", "\f", "\t", "\b", "'");
-  $replace = array('\\\\', "\\n", "\\r", "\\f", "\\t", "\\b", "&#039");
-  $json = str_replace($search, $replace, $json);
-
-  return $json;
 }
 
 /**
@@ -164,7 +148,7 @@ function outsell_sharing_build_node($content) {
 
   // Try to find an existing node if we have an id.
   if ($id) {
-    $node = node_load($id);
+    $node = node_load($id, NULL, TRUE);
   }
 
   // If node does not exist already lets spin up a new one.
@@ -216,9 +200,9 @@ function outsell_sharing_build_node($content) {
           foreach ($data as $datum) {
             $eck = 'eck_' . $datum['type'];
             $sql = db_query(
-              "select id from $eck where title like :datum",
+              "select id from $eck where title = :datum",
               array(
-                ':datum' => '%' . db_like($datum['title']) . '%',
+                ':datum' => $datum['title'],
               )
             );
             foreach ($sql as $s) {
@@ -403,7 +387,7 @@ function _map_tethys_nodes($title) {
   $sql = "select nid from node where type='tethys' and title=:title limit 1";
   $result = db_query($sql, array(':title' => $title));
   foreach ($result as $r) {
-    $node = node_load($r->nid);
+    $node = node_load($r->nid, NULL, TRUE);
   }
   if ($node) {
     $tlid = ($node->field_entity_id) ? $node->field_entity_id['und'][0]['value'] : '';
