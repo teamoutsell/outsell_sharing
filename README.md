@@ -75,8 +75,8 @@ By default Kalabox is not great with multi-site communication so you will need t
       - "site1.kbox.site:172.17.0.10"
       - "site2.kbox.site:172.17.0.12"
     ```
-
-  4. Restart each sending site.
+  4. Run `kbox drush pullenv` on your sending site (editors).
+  5. Restart each sending site.
   5. profit
 
 There is also a drush command to run the batch send from cli.  Similar to running the batch from the Drupal UI you need to set up the `extra_hosts` networking in the drush service; like so:
