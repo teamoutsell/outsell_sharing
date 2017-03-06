@@ -33,7 +33,9 @@ function outsell_sharing_drush_command() {
     'callback' => 'outsell_sharing_send',
     'options' => array(
       'amount' => dt('Amount to send per content type.  This defaults to 0; which will send all the nodes of type: `insight`, `news`, and `reports`.'),
-      // 'types' => dt('The types to send (insight, news, reports).'), TODO: allow overriding of types in the future.
+      'insight' => dt('Enable the insight content type as part of this migration.'),
+      'news' => dt('Enable the news content type as part of this migration.'),
+      'report' => dt('Enable the report content type as part of this migration.'),
       'oss-debug' => dt('Turn on debug logging defaults to FALSE.  With `oss-debug` set to TRUE the json output of the failed nodes is output to stdio for further inspection.'),
       'sites' => dt('The URLs of the sites you wish to share to. By default this will pull from the sites that are configured via the configuration form but you can override that value(s) here if you wish.'),
       'order' => dt('The order to select the nodes: asc (oldest), desc (newest)'),
@@ -59,6 +61,9 @@ function outsell_sharing_send() {
   $order = drush_get_option('order', variable_get('outsell_sharing_batch_order', 'desc'));
   $min = drush_get_option('min');
   $max = drush_get_option('max');
+  $insight = drush_get_option('insight', variable_get('outsell_sharing_send_insight'));
+  $news = drush_get_option('news', variable_get('outsell_sharing_send_news'));
+  $report = drush_get_option('report', variable_get('outsell_sharing_send_report'));
   $my_sites = drush_get_option('sites', '');
   $form_state = array();
   $form_state['values']['outsell_sharing_batch_debug'] = drush_get_option('oss-debug', FALSE);
@@ -68,9 +73,9 @@ function outsell_sharing_send() {
   else {
     $form_state['values']['outsell_sharing_sites'] = $my_sites;
   }
-  $form_state['values']['outsell_sharing_send_insight'] = variable_get('outsell_sharing_send_insight');
-  $form_state['values']['outsell_sharing_send_news'] = variable_get('outsell_sharing_send_news');
-  $form_state['values']['outsell_sharing_send_report'] = variable_get('outsell_sharing_send_report');
+  $form_state['values']['outsell_sharing_send_insight'] = $insight;
+  $form_state['values']['outsell_sharing_send_news'] = $news;
+  $form_state['values']['outsell_sharing_send_report'] = $report;
   $form_state['values']['outsell_sharing_batch_order'] = variable_get('outsell_sharing_batch_order');
   $form_state['values']['outsell_sharing_batch_amount'] = $amount;
   $form_state['values']['outsell_sharing_batch_order'] = $order;
