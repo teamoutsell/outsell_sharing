@@ -208,7 +208,7 @@ function outsell_sharing_build_node($content) {
               );
               foreach ($sql as $s) {
                 $ids[] = $s->id;
-              }  
+              }
             }
           }
           $new_node->$key->set($ids);
