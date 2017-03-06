@@ -66,18 +66,19 @@ Local Setup with Kalabox
 
 By default Kalabox is not great with multi-site communication so you will need to do a few extra things to get sharing to work locally:
 
-  1. Start all the "receiving sites" first.
-  2. Run `docker inspect SITENAME_web_1 | grep IPAddress` on each receiving site and make a note of the IP for each site.
-  3. Open up the `kalabox-compose.yml` for each "sending site" and add the following lines to the `appserver` service based on what you got back in #2.
+  1. Start all sites.
+  2. Run `kbox drush pullenv` on each site.
+  3. Run `kbox restart` on each site.
+  4. Run `docker inspect SITENAME_web_1 | grep IPAddress` on each receiving site and make a note of the IP for each site.
+  5. Open up the `kalabox-compose.yml` for each "sending site" and add the following lines to the `appserver` service based on what you got back in #2.
 
     ```yml
     extra_hosts:
       - "site1.kbox.site:172.17.0.10"
       - "site2.kbox.site:172.17.0.12"
     ```
-
-  4. Restart each sending site.
-  5. profit
+  6. Restart each sending site.
+  7. profit
 
 There is also a drush command to run the batch send from cli.  Similar to running the batch from the Drupal UI you need to set up the `extra_hosts` networking in the drush service; like so:
 

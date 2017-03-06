@@ -352,7 +352,20 @@ function outsell_sharing_sender_batch_submit($form, &$form_state) {
   foreach ($content_types as $content_type) {
 
     // Construct the query string.
-    $query = 'SELECT nid, created FROM {node} WHERE type = :type ORDER BY created ';
+    $query = 'SELECT nid, created FROM {node} WHERE type = :type ';
+
+    // Drush helpers for more granularity in sending.
+    if ($form_state['values']['min']) {
+      $query .= ' and nid >= ' . $form_state['values']['min'] . ' ';
+    }
+
+    // Drush helpers for more granularity in sending.
+    if ($form_state['values']['max']) {
+      $query .= ' and nid <= ' . $form_state['values']['max'] . ' ';
+    }
+
+    // Put the order by statement onto the query.
+    $query .= ' ORDER BY created ';
 
     // Add the sort order.
     $query .= $form_state['values']['outsell_sharing_batch_order'];

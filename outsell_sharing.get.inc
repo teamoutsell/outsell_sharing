@@ -148,7 +148,7 @@ function outsell_sharing_build_node($content) {
 
   // Try to find an existing node if we have an id.
   if ($id) {
-    $node = node_load($id);
+    $node = node_load($id, NULL, TRUE);
   }
 
   // If node does not exist already lets spin up a new one.
@@ -198,15 +198,17 @@ function outsell_sharing_build_node($content) {
 
           $ids = array();
           foreach ($data as $datum) {
-            $eck = 'eck_' . $datum['type'];
-            $sql = db_query(
-              "select id from $eck where title like :datum",
-              array(
-                ':datum' => '%' . db_like($datum['title']) . '%',
-              )
-            );
-            foreach ($sql as $s) {
-              $ids[] = $s->id;
+            if (!empty($datum['type'])) {
+              $eck = 'eck_' . $datum['type'];
+              $sql = db_query(
+                "select id from $eck where title = :datum",
+                array(
+                  ':datum' => $datum['title'],
+                )
+              );
+              foreach ($sql as $s) {
+                $ids[] = $s->id;
+              }
             }
           }
           $new_node->$key->set($ids);
