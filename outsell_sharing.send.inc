@@ -23,13 +23,13 @@ function outsell_sharing_build_node($node) {
   foreach ($node as $key => $data) {
 
     // If this is a field lets use the emw.
-    if (field_info_field($key) !== NULL) {
+    if ($field_info = field_info_field($key) && is_array($field_info)) {
 
       // Get the field value and add it to our contents.
       $content[$key] = $wrap_node->$key->value();
 
       // Check if the field is a file field so we can grab the contents as well.
-      if (in_array(field_info_field($key)['type'], $file_fields)) {
+      if (in_array($field_info['type'], $file_fields)) {
         $file = $content[$key]['uri'];
         if ($file && !empty($file)) {
           $content[$key]['data'] = base64_encode(file_get_contents($file));
