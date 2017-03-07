@@ -21,9 +21,10 @@ function outsell_sharing_build_node($node) {
 
   // Go through all the fields and build out the data.
   foreach ($node as $key => $data) {
+    $field_info = field_info_field($key);
 
     // If this is a field lets use the emw.
-    if ($field_info = field_info_field($key) && is_array($field_info)) {
+    if ($field_info && is_array($field_info) && $key !== 'comment_body') {
 
       // Get the field value and add it to our contents.
       $content[$key] = $wrap_node->$key->value();
@@ -35,7 +36,6 @@ function outsell_sharing_build_node($node) {
           $content[$key]['data'] = base64_encode(file_get_contents($file));
         }
       }
-
     }
     // Check for the $node->uid, load the user and send user info along too.
     elseif ($key == 'uid') {
