@@ -391,13 +391,10 @@ function outsell_sharing_api_upsert() {
  *   The tethys lecacy ID string; for example: 'entity:d7entity/61044:und'.
  */
 function _map_tethys_nodes($title) {
-  $sql = "select nid from node where type='tethys' and title=:title limit 1";
+  $sql = "select item_id from tlid_and_title where entity_d7entity_title=:title limit 1";
   $result = db_query($sql, array(':title' => $title));
   foreach ($result as $r) {
-    $node = node_load($r->nid, NULL, TRUE);
-  }
-  if ($node) {
-    $tlid = ($node->field_entity_id) ? $node->field_entity_id['und'][0]['value'] : '';
+    $tlid = $r->item_id;
   }
 
   return $tlid;
