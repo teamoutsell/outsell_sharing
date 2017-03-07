@@ -182,6 +182,11 @@ function outsell_sharing_build_node($content) {
     }
   }
 
+  // Handle status updating.
+  if (isset($content['status'])) {
+    $node->status = $content['status'];
+  }
+
   // Create the metadata wrapper.
   $new_node = entity_metadata_wrapper('node', $node);
 
