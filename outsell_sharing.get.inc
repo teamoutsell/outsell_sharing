@@ -153,17 +153,8 @@ function outsell_sharing_build_node($content) {
 
   // If node does not exist already lets spin up a new one.
   if (empty($node)) {
-
     // Create a base entity.
     $node = entity_create('node', array('type' => $content['type']));
-
-    // Add in any non-fieldy meta-data (properties).
-    foreach ($content as $key => $data) {
-      if (field_info_field($key) === NULL) {
-        $node->$key = $data;
-      }
-    }
-
   }
 
   // Handle user mapping.
@@ -182,9 +173,20 @@ function outsell_sharing_build_node($content) {
     }
   }
 
-  // Handle status updating.
-  if (isset($content['status'])) {
-    $node->status = $content['status'];
+  // Handle updating properties.
+  $properties = array(
+    'status',
+    'title',
+    'created',
+    'changed',
+    'uuid',
+    'language'
+  );
+
+  foreach ($properties as $property) {
+    if (isset($content[$property])) {
+      $node->$property = $content[$property];
+    }
   }
 
   // Create the metadata wrapper.
