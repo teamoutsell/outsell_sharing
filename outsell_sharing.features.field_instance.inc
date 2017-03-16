@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * outsell_sharing.features.field_instance.inc
@@ -10,61 +9,6 @@
  */
 function outsell_sharing_field_default_field_instances() {
   $field_instances = array();
-
-  // Exported field_instance: 'company-company-field_address'.
-  $field_instances['company-company-field_address'] = array(
-    'bundle' => 'company',
-    'default_value' => NULL,
-    'deleted' => 0,
-    'description' => '',
-    'display' => array(
-      'default' => array(
-        'label' => 'above',
-        'module' => 'addressfield',
-        'settings' => array(
-          'format_handlers' => array(
-            0 => 'address',
-          ),
-          'use_widget_handlers' => 1,
-        ),
-        'type' => 'addressfield_default',
-        'weight' => 1,
-      ),
-      'teaser' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
-      ),
-    ),
-    'entity_type' => 'company',
-    'field_name' => 'field_address',
-    'label' => 'HQ Location ',
-    'required' => 0,
-    'settings' => array(
-      'user_register_form' => FALSE,
-    ),
-    'widget' => array(
-      'active' => 1,
-      'module' => 'addressfield',
-      'settings' => array(
-        'available_countries' => array(),
-        'default_country' => 'site_default',
-        'format_handlers' => array(
-          'address' => 'address',
-          'address-hide-postal-code' => 0,
-          'address-hide-street' => 0,
-          'address-hide-country' => 0,
-          'organisation' => 0,
-          'name-full' => 0,
-          'name-oneline' => 0,
-          'address-optional' => 0,
-        ),
-      ),
-      'type' => 'addressfield_standard',
-      'weight' => 34,
-    ),
-  );
 
   // Exported field_instance: 'company-company-field_company'.
   $field_instances['company-company-field_company'] = array(
@@ -1409,6 +1353,52 @@ It will be hidden in the node add/edit form.',
     ),
   );
 
+  // Exported field_instance: 'node-news-field_campaign'.
+  $field_instances['node-news-field_campaign'] = array(
+    'bundle' => 'news',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 14,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_campaign',
+    'label' => 'campaign',
+    'required' => 0,
+    'settings' => array(
+      'text_processing' => 0,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'size' => 60,
+      ),
+      'type' => 'text_textfield',
+      'weight' => 36,
+    ),
+  );
+
   // Exported field_instance: 'node-news-field_categorie_regions'.
   $field_instances['node-news-field_categorie_regions'] = array(
     'bundle' => 'news',
@@ -1637,6 +1627,65 @@ It will be hidden in the node add/edit form.',
       ),
       'type' => 'options_select',
       'weight' => 8,
+    ),
+  );
+
+  // Exported field_instance: 'node-news-field_mail_date'.
+  $field_instances['node-news-field_mail_date'] = array(
+    'bundle' => 'news',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'date',
+        'settings' => array(
+          'format_type' => 'long',
+          'fromto' => 'both',
+          'multiple_from' => '',
+          'multiple_number' => '',
+          'multiple_to' => '',
+        ),
+        'type' => 'date_default',
+        'weight' => 13,
+      ),
+      'full' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+      'teaser' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'node',
+    'field_name' => 'field_mail_date',
+    'label' => 'mail_date',
+    'required' => 0,
+    'settings' => array(
+      'default_value' => 'now',
+      'default_value2' => 'same',
+      'default_value_code' => '',
+      'default_value_code2' => '',
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'date',
+      'settings' => array(
+        'increment' => 15,
+        'input_format' => 'm/d/Y - H:i:s',
+        'input_format_custom' => '',
+        'label_position' => 'above',
+        'text_parts' => array(),
+        'year_range' => '-3:+3',
+      ),
+      'type' => 'date_popup',
+      'weight' => 34,
     ),
   );
 
