@@ -51,7 +51,8 @@ function outsell_sharing_settings_form() {
     '#description' => t('Enter sites here in the format url|apikey (one per line), e.g:
 <br/>
 <br/>https://editors.kbox.site|h39yfih9po3nop3u9fh3
-<br/>https://outsellinc.com|09u3foin4fioh8hlkeshio
+// uncomment to enable the sharing with outsell again
+//<br/>https://outsellinc.com|09u3foin4fioh8hlkeshio
 <br/>
 <br/>NOTE: You must enable these sites to receive content. When you do you will get an API key to use above.
 '),
