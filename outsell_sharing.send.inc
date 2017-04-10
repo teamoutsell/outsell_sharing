@@ -105,6 +105,11 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
   $result = curl_exec($ch);
   $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+  if (curl_errno($ch)) {
+    $error = curl_error($ch);
+    watchdog('outsell_sharing', 'Failed to send content NID %nid to %endpoint with message ' . print_r($error, TRUE), array('%nid' => $content['nid'], '%endpoint' => $endpoint), WATCHDOG_WARNING, NULL);
+  }
+
   // Close connection.
   curl_close($ch);
 
