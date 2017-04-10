@@ -67,7 +67,7 @@ Local Setup with Kalabox
 By default Kalabox is not great with multi-site communication so you will need to do a few extra things to get sharing to work locally:
 
   1. Start all sites.
-  2. Run `kbox drush pullenv` on each site.
+  2. Run `kbox pullenv` on each site.
   3. Run `kbox restart` on each site.
   4. Run `docker inspect SITENAME_web_1 | grep IPAddress` on each receiving site and make a note of the IP for each site.
   5. Open up the `kalabox-compose.yml` for each "sending site" and add the following lines to the `appserver` service based on what you got back in #2.
