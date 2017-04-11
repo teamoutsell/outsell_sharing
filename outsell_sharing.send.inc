@@ -102,12 +102,10 @@ function outsell_sharing_send_content($method, $content, $endpoint, $apikey) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
   }
 
-  // If we are on production, temporarily disable SSL checking.
+  // Temporarily disable SSL checking.
   // @todo: Figure out what's wrong here.
-  if ($_ENV['PLATFORM_ENVIRONMENT'] === 'master') {
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-  }
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 
   // Execute.
   $result = curl_exec($ch);
